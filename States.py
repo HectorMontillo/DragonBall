@@ -30,8 +30,19 @@ class PantallaInicio(State):
         self.pow = 100
         self.ntran = 3
         self.tran = 1
+        self.fuente = pg.font.Font(None,22)
+        self.text = self.fuente.render("Presione A para ir al menu principal", True, c.NEGRO)
 
     def update(self):
+
+
+        key = pg.key.get_pressed()
+
+        if key[pg.K_a]:
+            self.fin = True
+
+
+
         self.ventana.fill(c.BLANCO)
 
         if self.tran == 1:
@@ -40,6 +51,8 @@ class PantallaInicio(State):
             self.ventana.blit(c.GraficosPantallaPrincipal["LogoISC"],(self.x,self.y))
         else:
             self.ventana.blit(c.GraficosPantallaPrincipal["Presentacion"],(self.x,self.y))
+
+        self.ventana.blit(self.text,(c.TAMANO_VENTANA[0]-268,c.TAMANO_VENTANA[1]-32))
 
 
         self.x += self.pow
@@ -191,11 +204,12 @@ class Level1(State):
         "Run" : comp.recortarAnimacion(c.CellSheets["Run"],(52,52),2),
         "Shoot" : comp.recortarAnimacion(c.CellSheets["Shoot"],(64,64),2),
         }
-        self.aniRino = {
-        "Idle" : comp.recortarAnimacion(c.RinoSheets["Idle"],(64,64),2),
-        "Attack" : comp.recortarAnimacion(c.RinoSheets["Attack"],(64,64),2),
-        }
         '''
+        self.aniRino = {
+        "Idle" : comp.recortarAnimacion(c.TriceratopsSheets["Idle"],(64,64),2),
+        "Attack" : comp.recortarAnimacion(c.TriceratopsSheets["Attack"],(64,64),2),
+        }
+
 
         #Objetos
         self.target = [None]
@@ -213,7 +227,7 @@ class Level1(State):
         self.generarjsonmuros()
         self.todos.add(self.bg)
         #self.generarjsonorbes()
-        #self.generarjsonenemigos()
+        self.generarjsonenemigos()
         self.todos.add(self.goku)
         self.generarjsonforeground()
 
@@ -264,15 +278,17 @@ class Level1(State):
             self.todos.add(orb)
 
     def generarjsonenemigos(self):
+        '''
         for i in self.datos["layers"][6]["objects"]:
             pos = (i["x"],i["y"])
             en = comp.EnemigoDinamico(self.aniCell,pos,self.muros,self.shoots,self.shootsenemigos,self.todos,self.target)
             self.enemigosdinamicos.add(en)
             self.todos.add(en)
-        for i in self.datos["layers"][7]["objects"]:
+        '''
+        for i in self.datos["layers"][4]["objects"]:
             pos = (i["x"],i["y"])
-            en = comp.EnemigoEstatico(self.aniRino,pos,self.shoots,self.shootsenemigos,self.todos,self.target)
-            self.enemigosdinamicos.add(en)
+            en = comp.Triceratops(self.aniRino,pos,self.shoots,self.shootsenemigos,self.todos,self.target)
+            self.enemigos.add(en)
             self.todos.add(en)
 
 

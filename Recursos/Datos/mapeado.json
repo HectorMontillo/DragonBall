@@ -306,8 +306,148 @@
          "width":1,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":1,
+         "name":"Tricepratops",
+         "objects":[
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":21,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1300,
+                 "y":864
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":22,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":23,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":568,
+                 "y":1126
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":24,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":842,
+                 "y":1136
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":25,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1296,
+                 "y":1790
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":26,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":790,
+                 "y":1808
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":27,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1302,
+                 "y":2332
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":28,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":824,
+                 "y":2166
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":1,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":21,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "properties":
     {
@@ -365,6 +505,23 @@
          "tilecount":1,
          "tileheight":544,
          "tilewidth":336,
+         "transparentcolor":"#ff00ff"
+        }, 
+        {
+         "firstgid":4,
+         "image":"..\/..\/..\/..\/DBZ_beatall\/recursos\/idle_rino.png",
+         "imageheight":256,
+         "imagewidth":128,
+         "margin":0,
+         "name":"idle_rino",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":8,
+         "tileheight":64,
+         "tilewidth":64,
          "transparentcolor":"#ff00ff"
         }],
  "tilewidth":3904,

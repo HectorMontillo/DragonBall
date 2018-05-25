@@ -23,7 +23,7 @@ def main():
     }
 
     controlador = Control()
-    controlador.preparar_estados(diccionarioEstados,diccionarioEstados["Menu"])   
+    controlador.preparar_estados(diccionarioEstados,diccionarioEstados["PantallaInicio"])
     print "-----------Sistema de estados, Inicializado--------------"
     controlador.main()
     print "-----------------Aplicaion Finalizada--------------------"

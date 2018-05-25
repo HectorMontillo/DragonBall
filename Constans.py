@@ -56,16 +56,22 @@ GokuSheets = {
 "Shoot": pg.image.load("Recursos/Sprites/Goku/shoot_goku.png")
 }
 
+TriceratopsSheets = {
+"Idle": pg.image.load("Recursos/Sprites/Triceratops/idle_rino.png"),
+"Attack": pg.image.load("Recursos/Sprites/Triceratops/attack_rino.png")
+}
+
 ItemSheets = {
 "Shoot": pg.image.load("Recursos/Sprites/Items/shoot.png"),
-"BarLife": pg.image.load("Recursos/Sprites/Items/barlife.png"),
+"BarLife": pg.image.load("Recursos/Graficos/Foregrounds/barlife.png"),
+"RinoBarLife": pg.image.load("Recursos/Graficos/Foregrounds/rino_barlife.png"),
 "Impacto1":  pg.image.load("Recursos/Sprites/Items/impactonaranja.png"),
-"Impacto":  pg.image.load("Recursos/Sprites/Items/impactoazul.png")
+"Impacto":  pg.image.load("Recursos/Sprites/Items/impactoazul.png"),
+"Fire":  pg.image.load("Recursos/Sprites/Items/fire.png")
 }
 
 Level1Graficos = {
-    "Background": pg.image.load("Recursos/Graficos/Backgrounds/Background.png"),
-    "Palmera" : comp.recortarAnimacion(pg.image.load("Recursos/Graficos/Foregrounds/palmera.png"),(48,76),2),
-    "Edificio" : pg.image.load("Recursos/Graficos/Foregrounds/edificio.png"),
-
+"Background": pg.image.load("Recursos/Graficos/Backgrounds/Background.png"),
+"Palmera" : comp.recortarAnimacion(pg.image.load("Recursos/Graficos/Foregrounds/palmera.png"),(48,76),2),
+"Edificio" : pg.image.load("Recursos/Graficos/Foregrounds/edificio.png"),
 }

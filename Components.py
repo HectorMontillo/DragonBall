@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import pygame as pg
 import Constans as c
 import random
@@ -48,21 +51,17 @@ class Goku(pg.sprite.Sprite):
         self.layer = 2
         self.target = tar
         self.orbevictoria = False
-
         self.vidamax = 180
         self.vida = 500
         self.kimax = 100
         self.ki = 500
-
         self.puno = False
         self.fpuno = False
         self.puno2 = False
         self.fpuno2 = False
         self.shoot = False
         self.fshoot = False
-
         self.punorang = 48
-
         self.anim = "Idle"
         self.prevanim = ""
         self.dir = 0
@@ -70,18 +69,13 @@ class Goku(pg.sprite.Sprite):
         self.speedanim = 5
         self.tickcount = 0
         self.f = False
-
         self.fdano = True
         self.danotick = True
-
-
-        self.dano = 10
-        self.poder = 20
-
-
+        self.dano = 5
+        self.poder = 5
 
     def disparar(self):
-        b = Shoot(self.rect.center, self.dir,0)
+        b = Shoot(self.rect.center, self.dir,0,self.dano+self.poder+20)
         self.bgroup.add(b)
         self.all.add(b)
 
@@ -108,23 +102,23 @@ class Goku(pg.sprite.Sprite):
 
         self.all.add(i)
         for en in self.egroup:
-            if i.rect.colliderect(en.rect):
+            collide = pg.sprite.collide_circle(i,en)
+            if collide:
+                if self.puno or self.puno2:
+                    text = TextoFlotante((en.rect.x,en.rect.y),"-{} golpe".format(d),c.ROJO)
+                    self.all.add(text)
                 self.target[0] = en
                 en.vida -= d
-                #print en.vida
 
     def update(self):
         global Global_posicion_x
         global Global_posicion_y
         global Global_speed_x
         global Global_speed_y
-
         self.xspeed = 0
         self.yspeed = 0
-
         #Teclas
         keystate = pg.key.get_pressed()
-
         if keystate[pg.K_SPACE]:
             if (not self.puno) and (not self.puno2) and (not self.shoot):
                 if self.ki >= 1:
@@ -160,7 +154,6 @@ class Goku(pg.sprite.Sprite):
             self.dir = 0
             self.xspeed = 0
 
-
         if keystate[pg.K_a] and (not self.fpuno) and (not self.fpuno2) and (not self.fshoot) and (not self.puno):
             self.puno = True
             self.fpuno = True
@@ -170,7 +163,7 @@ class Goku(pg.sprite.Sprite):
         if keystate[pg.K_s] and (not self.fpuno) and (not self.fpuno2) and (not self.fshoot) and (not self.puno2) and (self.ki >= 3):
             self.puno2 = True
             self.ki -= 2
-            text = TextoFlotante((self.rect.x,self.rect.y),"-2 ki",c.ROJO)
+            text = TextoFlotante((self.rect.x,self.rect.y),"-2 ki",c.AZUL)
             self.all.add(text)
             self.fpuno2 = True
             self.indexanim = 0
@@ -179,11 +172,8 @@ class Goku(pg.sprite.Sprite):
         if keystate[pg.K_d] and (not self.fpuno) and (not self.fpuno2) and (not self.fshoot) and (not self.shoot) and (self.ki >= 10):
             self.shoot = True
             self.ki -= 5
-            text = TextoFlotante((self.rect.x,self.rect.y),"-5 ki",c.ROJO)
-            self.all.add(text)
             self.fshoot = True
             self.indexanim = 0
-
 
         if (not keystate[pg.K_a]):
             self.fpuno = False
@@ -251,15 +241,18 @@ class Goku(pg.sprite.Sprite):
             orb.kill()
 
         #Colisiones con el enemigo
-        collisions = pg.sprite.spritecollide(self,self.egroup,False)
+        for en in self.egroup:
+            collide = pg.sprite.collide_circle(self,en)
+            if collide:
+                if self.fdano:
+                    self.vida -= en.cdano
+                    im = Impacto(self.rect.center, 0)
+                    text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(en.cdano),c.ROJO)
+                    self.all.add(text)
 
-        for en in collisions:
-            if self.fdano:
-                self.vida -= 20
-                im = Impacto(self.rect.center, 0)
-                self.all.add(im)
-            else:
-                self.danotick +=1
+                    self.all.add(im)
+                else:
+                    self.danotick +=1
 
         if self.danotick == 30:
             self.danotick = 0
@@ -271,13 +264,12 @@ class Goku(pg.sprite.Sprite):
         collisions = pg.sprite.spritecollide(self,self.bgroup2,False)
 
         for b in collisions:
-            if b.tipo == 0:
-                self.vida -= 30
-            elif b.tipo == 1:
-                self.vida -= 60
-            b.kill()
+            self.vida -= b.dano
             im = Impacto(self.rect.center, 0)
+            text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(b.dano),c.ROJO)
+            self.all.add(text)
             self.all.add(im)
+            b.kill()
 
         #Gestion de la Animacion
         if (self.tickcount < self.speedanim):
@@ -293,6 +285,8 @@ class Goku(pg.sprite.Sprite):
                     self.shoot = False
                     self.disparar()
                     self.punometod()
+                    text = TextoFlotante((self.rect.x,self.rect.y),"-5 ki",c.AZUL)
+                    self.all.add(text)
 
 
             elif self.anim == "Puno2":
@@ -379,7 +373,102 @@ class Goku(pg.sprite.Sprite):
                 self.rect.top = 32
             Global_speed_y = 0
 
+class Triceratops(pg.sprite.Sprite):
+    def __init__(self,spr,pos, bgroup,bgroup2,all,tar):
+        pg.sprite.Sprite.__init__(self)
+        self.name = "Rino"
+        self.MatrizAnimations = spr;
+        self.image = self.MatrizAnimations["Idle"][0][0]
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.init_x = self.rect.x
+        self.init_y = self.rect.y
 
+        self.bgroup = bgroup
+        self.bgroup2 = bgroup2
+        self.target = tar
+        self.all = all
+        self.layer = 1
+
+        self.vidamax = 456
+        self.vida = 456
+
+        self.shoot = False
+        self.anim = "Idle"
+        self.dir = random.randrange(0,4)
+        self.indexanim = 0
+        self.speedanim = 5
+        self.n = 0
+        self.time = random.randrange(100,200)
+        self.timeidle = self.time
+        self.wait = 10
+        self.radius = 50
+
+        self.dano = 50
+        self.cdano = 10
+
+    def disparar(self):
+        b = Shoot(self.rect.center, self.dir, 1,self.dano)
+        self.bgroup2.add(b)
+        self.all.add(b)
+
+    def update(self):
+        self.rect.x = self.init_x + Global_posicion_x
+        self.rect.y = self.init_y + Global_posicion_y
+
+        if self.timeidle > 1 and not self.shoot:
+            self.timeidle -= 1
+        elif self.timeidle == 1:
+            self.dir = random.randrange(0,4)
+            self.timeidle -= 1
+        else:
+            self.shoot = True
+            self.timeidle = self.time
+
+        if self.shoot == True:
+
+            if self.n < self.speedanim:
+                self.n += 1
+            else:
+                self.n = 0
+                if self.indexanim < 2:
+                    self.indexanim += 1
+                else:
+                    self.indexanim = 0
+                    self.disparar()
+                    self.shoot = False
+
+            self.image = self.MatrizAnimations["Attack"][self.dir][self.indexanim]
+
+        else:
+
+            if self.n < self.speedanim:
+                self.n += 1
+            else:
+                self.n = 0
+                if self.indexanim < 1:
+                    self.indexanim += 1
+                else:
+                    self.indexanim = 0
+
+            self.image = self.MatrizAnimations["Idle"][self.dir][self.indexanim]
+
+
+        collisions = pg.sprite.spritecollide(self,self.bgroup,False)
+
+        for b in collisions:
+            self.target[0] = self
+            text = TextoFlotante((self.rect.x,self.rect.y),"-{} bola de energia".format(b.dano),c.ROJO)
+            self.all.add(text)
+            im = Impacto(self.rect.center,1)
+            self.all.add(im)
+            b.kill()
+            self.vida -= b.dano
+
+        if self.vida <= 0:
+            self.target[0] = None
+            self.kill()
 
 class TextoFlotante(pg.sprite.Sprite):
         def __init__(self, pos,texto,color):
@@ -395,14 +484,16 @@ class TextoFlotante(pg.sprite.Sprite):
             self.init_x = self.rect.x
             self.init_y = self.rect.y
             #self.speed = random.randrange(-2,2)
-            self.speedy = random.randrange(-2,2)
-            self.speedx = random.randrange(-2,2)
+            self.speedyfija = random.randrange(-2,2)
+            self.speedxfija = random.randrange(-2,2)
+            self.speedx = 0
+            self.speedy = 0
 
             self.timelive = 20
 
         def update(self):
-            self.speedx = Global_speed_x + self.speedx
-            self.speedy = Global_speed_y + self.speedy
+            self.speedx = Global_speed_x + self.speedxfija
+            self.speedy = Global_speed_y + self.speedyfija
 
             self.rect.x += self.speedx
             self.rect.y += self.speedy
@@ -432,6 +523,7 @@ class Impacto(pg.sprite.Sprite):
             self.init_x = self.rect.x
             self.init_y = self.rect.y
             self.layer = 1
+            self.radius = 20
 
             self.indexanim = 0
             self.n =0
@@ -495,7 +587,7 @@ class Edificio(pg.sprite.Sprite):
             self.rect.y = self.init_y + Global_posicion_y
 
 class Shoot(pg.sprite.Sprite):
-    def __init__(self, xy, dir,t):
+    def __init__(self, xy, dir,t,dano):
         pg.sprite.Sprite.__init__(self)
         self.tipo = t
         if self.tipo == 0:
@@ -519,6 +611,7 @@ class Shoot(pg.sprite.Sprite):
         self.yspeed = 0
         self.speed = 10
         self.layer = 1
+        self.dano = dano
 
     def update(self):
         self.xspeed = Global_speed_x

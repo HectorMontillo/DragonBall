@@ -87,9 +87,11 @@ MinionSheets = {
 
 ItemSheets = {
 "Shoot": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/shoot.png"),(64,64),1),
+"Shoot_Minion": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/shoot_minion.png"),(16,16),2),
 "BarLife": pg.image.load("Recursos/Graficos/Foregrounds/barlife.png"),
 "BarLifePro": pg.image.load("Recursos/Graficos/Foregrounds/barlifepro.png"),
 "RinoBarLife": pg.image.load("Recursos/Graficos/Foregrounds/rino_barlife.png"),
+"MinionBarLife": pg.image.load("Recursos/Graficos/Foregrounds/minion_barlife.png"),
 "Impacto1": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/impactonaranja.png"),(64,64),1),
 "Impacto": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/impactoazul.png"),(80,80),1),
 "Fire": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/fire.png"),(96,96),1),
@@ -98,6 +100,8 @@ ItemSheets = {
 "Orbeexp": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbexp.png"),(32,32),1),
 "Orbetrampa": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbtrampa.png"),(32,32),1)
 }
+
+#print ItemSheets["Shoot_Minion"]
 
 Level1Graficos = {
 "Background": pg.image.load("Recursos/Graficos/Backgrounds/Background.png"),

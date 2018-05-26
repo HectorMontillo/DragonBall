@@ -172,6 +172,7 @@ class Level1(State):
         self.target = [None]
         self.bg = comp.Background(self.tamano_mundo)
         self.goku = comp.Goku(self.tamano_mundo,self.target)
+        #self.minion = comp.Minion((512,512),self.target)
         self.goku.rect.x = 512
         self.goku.rect.y = 512
 
@@ -183,6 +184,8 @@ class Level1(State):
         c.Grupos["todos"].add(self.bg)
         self.generarjsonorbes()
         self.generarjsonenemigos()
+        #c.Grupos["enemigos"].add(self.minion)
+        #c.Grupos["todos"].add(self.minion)
         c.Grupos["todos"].add(self.goku)
         self.generarjsonforeground()
 
@@ -226,6 +229,11 @@ class Level1(State):
             en = comp.Triceratops(pos,self.target)
             c.Grupos["enemigos"].add(en)
             c.Grupos["todos"].add(en)
+        for i in self.datos["layers"][8]["objects"]:
+            pos = (i["x"]+comp.Global_posicion_x,i["y"]+comp.Global_posicion_y)
+            en = comp.Minion(pos,self.target)
+            c.Grupos["enemigos"].add(en)
+            c.Grupos["todos"].add(en)
 
 
     def update(self):
@@ -255,9 +263,16 @@ class Level1(State):
 
 
         if self.target[0] != None:
-            pg.draw.rect(self.ventana,(100,100,100),(80,190,self.target[0].vidamax, 18))
-            pg.draw.rect(self.ventana,(255,0,0),(80,190,self.target[0].vida, 18))
+
             if self.target[0].name == "Cell":
+                pg.draw.rect(self.ventana,(100,100,100),(80,190,self.target[0].vidamax, 18))
+                pg.draw.rect(self.ventana,(255,0,0),(80,190,self.target[0].vida, 18))
                 self.ventana.blit(c.ItemSheets["CellBarLife"],(16,160))
-            else:
+            elif self.target[0].name == "Rino":
+                pg.draw.rect(self.ventana,(100,100,100),(58,178,self.target[0].vidamax, 15))
+                pg.draw.rect(self.ventana,(255,0,0),(58,178,self.target[0].vida, 15))
                 self.ventana.blit(c.ItemSheets["RinoBarLife"],(16,160))
+            else:
+                pg.draw.rect(self.ventana,(100,100,100),(58,178,self.target[0].vidamax, 15))
+                pg.draw.rect(self.ventana,(255,0,0),(58,178,self.target[0].vida, 15))
+                self.ventana.blit(c.ItemSheets["MinionBarLife"],(16,160))

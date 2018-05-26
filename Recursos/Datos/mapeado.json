@@ -483,22 +483,6 @@
                 {
                  "gid":4,
                  "height":64,
-                 "id":22,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
                  "id":25,
                  "name":"",
                  "properties":
@@ -1423,6 +1407,48 @@
                  "width":0,
                  "x":82,
                  "y":1832
+                }, 
+                {
+                 "height":0,
+                 "id":117,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2284,
+                 "y":1138
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":1,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":1,
+         "name":"Minions",
+         "objects":[
+                {
+                 "height":0,
+                 "id":118,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":952,
+                 "y":681.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1431,7 +1457,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":117,
+ "nextobjectid":124,
  "orientation":"orthogonal",
  "properties":
     {

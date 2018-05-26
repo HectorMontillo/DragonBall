@@ -297,8 +297,8 @@ class Goku(pg.sprite.Sprite):
             collisions = pg.sprite.spritecollide(self,c.Grupos["shootsenemigos"],False)
 
             for b in collisions:
-                danototal = (en.dano-(self.resistencia*en.dano/100))
-                self.vida -= (en.dano-(self.resistencia*en.dano/100))
+                danototal = (b.dano-(self.resistencia*b.dano/100))
+                self.vida -= (b.dano-(self.resistencia*b.dano/100))
                 im = Impacto(self.rect.center, 0)
                 text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(danototal),c.ROJO)
                 c.Grupos["todos"].add(text)
@@ -444,8 +444,8 @@ class Triceratops(pg.sprite.Sprite):
         self.live = True
         self.target = tar
         self.layer = 1
-        self.vidamax = 456
-        self.vida = 456
+        self.vidamax = 388
+        self.vida = 388
 
         self.shoot = False
         self.anim = "Idle"
@@ -569,6 +569,197 @@ class Triceratops(pg.sprite.Sprite):
             self.live = False
             #self.kill()
 
+class Minion(pg.sprite.Sprite):
+    def __init__(self,pos,tar):
+        pg.sprite.Sprite.__init__(self)
+        self.name = "Minion"
+        self.MatrizAnimations = c.MinionSheets
+        self.image = self.MatrizAnimations["Idle"][0][0]
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.xspeed = 0
+        self.yspeed = 0
+        self.speed = 2
+        self.target = tar
+        self.cdano = 5
+        self.dano = 10
+        self.flagdie = True
+        self.live = True
+
+        #self.ventana = pg.display.get_surface()
+        self.vidamax = 113
+        self.vida = 113
+
+        self.anim = "Idle"
+        self.dir = 0
+        self.indexanim = 0
+        self.speedanim = 5
+        self.n = 0
+        self.timevisible = 50
+        self.parpadeo = True
+
+        self.timeidle = random.randrange(100,200)
+        self.timerun = random.randrange(100,200)
+
+        self.contrun = 0
+        self.contidle = 0
+
+    def generarrecompensa(self):
+        n = random.randrange(3,10)
+        for i in range(n):
+            x = random.randrange(-128,128)
+            y = random.randrange(-128,128)
+            t = random.randrange(0,3)
+            if t == 0:
+                tipo = "Ki"
+            elif t==1:
+                tipo = "Vida"
+            elif t==2:
+                tipo = "Exp"
+            orb = Orbes(tipo,(self.rect.centerx+x-Global_posicion_x,self.rect.centery+y-Global_posicion_y))
+            #orb = Orbes(tipo,(512+x,512+y))
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
+
+    def disparar(self):
+        b = Shoot(self.rect.center, self.dir, 2,self.dano)
+        c.Grupos["shootsenemigos"].add(b)
+        c.Grupos["todos"].add(b)
+
+    def update(self):
+        self.yspeed = Global_speed_y
+        self.xspeed = Global_speed_x
+
+        if self.live:
+            if self.anim == "Walk":
+                self.speed = 2
+            else:
+                self.speed = 0
+
+            for us in c.Grupos["usuarios"]:
+                if (us.rect.bottom>self.rect.top) and (us.rect.right<self.rect.left):
+                    self.dir = 3
+                elif (us.rect.bottom>self.rect.top) and (us.rect.left>self.rect.right):
+                    self.dir = 1
+                elif (us.rect.bottom<self.rect.top):
+                    self.dir = 2
+                elif (us.rect.top>self.rect.bottom):
+                    self.dir = 0
+                else:
+                    self.dir = random.randrange(0,4)
+
+            if self.dir == 0:
+                self.yspeed = Global_speed_y + self.speed
+            elif self.dir == 1:
+                self.xspeed = Global_speed_x + self.speed
+            elif self.dir == 2:
+                self.yspeed = Global_speed_y - self.speed
+            elif self.dir == 3:
+                self.xspeed = Global_speed_x - self.speed
+
+            self.rect.x += self.xspeed
+            self.rect.y += self.yspeed
+
+
+            if self.contidle < self.timeidle:
+                self.contidle+=1
+                self.anim = "Idle"
+            elif self.contrun < self.timerun:
+                self.contrun+=1
+                self.anim = "Walk"
+            else:
+                self.anim = "Attack"
+
+
+            if self.n < self.speedanim:
+                self.n += 1
+            else:
+                self.n = 0
+                if self.anim == "Idle":
+                    self.animlimit = 1
+                elif self.anim == "Attack":
+                    self.animlimit = 2
+                else:
+                    self.animlimit = 3
+
+                if self.indexanim < self.animlimit:
+                    self.indexanim += 1
+                else:
+                    if self.anim == "Attack":
+                        self.disparar()
+                        self.contrun = 0
+                        self.contidle = 0
+                    self.indexanim = 0
+            try:
+                self.image = self.MatrizAnimations[self.anim][self.dir][self.indexanim]
+            except IndexError:
+                self.indexanim = 0
+                self.image = self.MatrizAnimations[self.anim][self.dir][self.indexanim]
+
+            collisions = pg.sprite.spritecollide(self,c.Grupos["muros"],False)
+
+            for w in collisions:
+                if self.dir==0:
+                    self.dir=2
+                    self.rect.y -= 5
+                elif self.dir == 1:
+                    self.dir=3
+                    self.rect.x -= 5
+                elif self.dir == 2:
+                    self.dir=0
+                    self.rect.y += 5
+                elif self.dir == 3:
+                    self.dir=1
+                    self.rect.x += 5
+
+            collisions = pg.sprite.spritecollide(self,c.Grupos["shoots"],False)
+
+            for b in collisions:
+                self.target[0] = self
+                im = Impacto(self.rect.center,0)
+                text = TextoFlotante((self.rect.x,self.rect.y),"-{} bola de energia".format(b.dano),c.ROJO)
+                c.Grupos["todos"].add(text)
+                c.Grupos["todos"].add(im)
+                b.kill()
+                self.vida -= b.dano
+            if self.vida <= 0:
+                #self.target[0] = None
+                self.live = False
+        else:
+            self.yspeed = Global_speed_y
+            self.xspeed = Global_speed_x
+
+            self.rect.x += self.xspeed
+            self.rect.y += self.yspeed
+
+            if self.n < self.speedanim:
+                self.n += 1
+            else:
+                self.n = 0
+                if self.indexanim < 3:
+                    self.indexanim += 1
+                else:
+                    self.indexanim = 0
+                    self.flagdie = False
+
+
+            if  self.flagdie:
+                self.image = self.MatrizAnimations["Die"][0][self.indexanim]
+            else:
+                if self.timevisible > 0:
+                    if self.parpadeo:
+                        self.parpadeo = False
+                        i = 3
+                    else:
+                        self.parpadeo = True
+                        i = 4
+                    self.image = self.MatrizAnimations["Die"][0][i]
+                    self.timevisible -= 1
+                else:
+                    self.generarrecompensa()
+                    self.kill()
+
 class TextoFlotante(pg.sprite.Sprite):
         def __init__(self, pos,texto,color):
             pg.sprite.Sprite.__init__(self)
@@ -688,13 +879,23 @@ class Edificio(pg.sprite.Sprite):
 class Shoot(pg.sprite.Sprite):
     def __init__(self, xy, dir,t,dano):
         pg.sprite.Sprite.__init__(self)
+
         self.tipo = t
         if self.tipo == 0:
             self.MatrizAnimations = c.ItemSheets["Shoot"]
             self.animlimit = 1
+            self.speed = 10
+
         elif self.tipo ==1:
             self.MatrizAnimations = c.ItemSheets["Fire"]
             self.animlimit = 2
+            self.speed = 7
+
+        elif self.tipo == 2:
+            self.MatrizAnimations = c.ItemSheets["Shoot_Minion"]
+            self.animlimit = 0
+            self.speed = 5
+
         self.image = self.MatrizAnimations[0][0]
         self.rect = self.image.get_rect()
         self.rect.centerx = xy[0]
@@ -708,7 +909,7 @@ class Shoot(pg.sprite.Sprite):
         self.n = 0
         self.xspeed = 0
         self.yspeed = 0
-        self.speed = 10
+
         self.layer = 1
         self.dano = dano
 
@@ -729,8 +930,10 @@ class Shoot(pg.sprite.Sprite):
             self.xspeed = Global_speed_x - self.speed
             self.anim = 0
 
-        if self.tipo == 1:
+        if self.tipo == 1 or self.tipo == 2:
             self.anim = self.dir
+
+
 
         self.rect.x += self.xspeed
         self.rect.y += self.yspeed
@@ -739,6 +942,7 @@ class Shoot(pg.sprite.Sprite):
         #self.rect.y = self.init_y + Global_posicion_y
 
         self.image = self.MatrizAnimations[self.anim][self.indexanim]
+
         if self.n < self.speedanim:
             self.n +=1
         else:

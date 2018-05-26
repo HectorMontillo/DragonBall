@@ -160,8 +160,9 @@ class Level1(State):
         self.tamano_mundo = (3904,4720)
         with open("Recursos/Datos/mapeado.json") as archivo:
             self.datos = json.load(archivo)
-        self.fuente = pg.font.Font(None, 18)
-        self.objetivo = self.fuente.render("Objetivo: Encuentra el Orbe ROJO, SPACE: Velociad, A: Golpe, S: Golpe Mejorado, D: Bola de energia", 0, (0, 0, 0))
+        self.fuente = pg.font.Font(None, 16)
+        self.fuente2 = pg.font.Font(None, 14)
+        #self.objetivo = self.fuente.render("Objetivo: Encuentra el Orbe ROJO, SPACE: Velociad, A: Golpe, S: Golpe Mejorado, D: Bola de energia", 0, (0, 0, 0))
         self.timewait = 50
 
         comp.Global_posicion_x = -512
@@ -180,7 +181,7 @@ class Level1(State):
         #Anadir objetos GRUPO TODOS
         self.generarjsonmuros()
         c.Grupos["todos"].add(self.bg)
-        #self.generarjsonorbes()
+        self.generarjsonorbes()
         self.generarjsonenemigos()
         c.Grupos["todos"].add(self.goku)
         self.generarjsonforeground()
@@ -203,28 +204,19 @@ class Level1(State):
             c.Grupos["todos"].add(m)
 
     def generarjsonorbes(self):
-        for i in self.datos["layers"][2]["objects"]:
-            pos = (i["x"],i["y"])
-            orb = comp.Orbes(self.aniorbes["OrbKi"],pos)
-            orb.tipo = "Ki"
-            c.Grupos["orbes"].add(orb)
-            c.Grupos["todos"].add(orb)
-        for i in self.datos["layers"][3]["objects"]:
-            pos = (i["x"],i["y"])
-            orb = comp.Orbes(self.aniorbes["OrbVida"],pos)
-            orb.tipo = "Vida"
-            c.Grupos["orbes"].add(orb)
-            c.Grupos["todos"].add(orb)
-        for i in self.datos["layers"][4]["objects"]:
-            pos = (i["x"],i["y"])
-            orb = comp.Orbes(self.aniorbes["OrbFuerza"],pos)
-            orb.tipo = "Fuerza"
-            c.Grupos["orbes"].add(orb)
-            c.Grupos["todos"].add(orb)
         for i in self.datos["layers"][5]["objects"]:
             pos = (i["x"],i["y"])
-            orb = comp.Orbes(self.aniorbes["OrbTrampa"],pos)
-            orb.tipo = "Trampa"
+            orb = comp.Orbes("Ki",pos)
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
+        for i in self.datos["layers"][6]["objects"]:
+            pos = (i["x"],i["y"])
+            orb = comp.Orbes("Vida",pos)
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
+        for i in self.datos["layers"][7]["objects"]:
+            pos = (i["x"],i["y"])
+            orb = comp.Orbes("Trampa",pos)
             c.Grupos["orbes"].add(orb)
             c.Grupos["todos"].add(orb)
 
@@ -251,14 +243,21 @@ class Level1(State):
         pg.draw.rect(self.ventana,(0,255,0),(80,46,self.goku.vida, 18))
         pg.draw.rect(self.ventana,(100,100,100),(80,64,self.goku.kimax, 12))
         pg.draw.rect(self.ventana,(0,0,255),(80,64,self.goku.ki, 12))
-        self.ventana.blit(c.ItemSheets["BarLife"],(16,16))
+        self.ventana.blit(c.ItemSheets["BarLifePro"],(16,16))
+        nivelexp = self.fuente.render("Exp {}/{}, Nivel {}".format(self.goku.exp,self.goku.nivel*20+20,self.goku.nivel),True,c.NEGRO)
+        fuerza =  self.fuente2.render("{}".format(self.goku.dano),True,c.BLANCO)
+        poder =  self.fuente2.render("{}".format(self.goku.poder),True,c.BLANCO)
+        resistencia =  self.fuente2.render("{}%".format(self.goku.resistencia),True,c.BLANCO)
+        self.ventana.blit(nivelexp,(150,48))
+        self.ventana.blit(fuerza,(116,86))
+        self.ventana.blit(poder,(116,96))
+        self.ventana.blit(resistencia,(116,106))
+
 
         if self.target[0] != None:
-            pg.draw.rect(self.ventana,(100,100,100),(80,126,self.target[0].vidamax, 18))
-            pg.draw.rect(self.ventana,(255,0,0),(80,126,self.target[0].vida, 18))
+            pg.draw.rect(self.ventana,(100,100,100),(80,190,self.target[0].vidamax, 18))
+            pg.draw.rect(self.ventana,(255,0,0),(80,190,self.target[0].vida, 18))
             if self.target[0].name == "Cell":
-                self.ventana.blit(c.ItemSheets["CellBarLife"],(16,96))
+                self.ventana.blit(c.ItemSheets["CellBarLife"],(16,160))
             else:
-                self.ventana.blit(c.ItemSheets["RinoBarLife"],(16,96))
-
-        self.ventana.blit(self.objetivo,(230,16))
+                self.ventana.blit(c.ItemSheets["RinoBarLife"],(16,160))

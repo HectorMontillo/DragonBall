@@ -10,6 +10,7 @@ VERDE = (0,255,0)
 AZUL = (0,0,255)
 NEGRO = (0,0,0)
 BLANCO = (255,255,255)
+AMARILLO = (255,255,0)
 
 #Recortador de Imagenes
 def recortarAnimacion(img,size,scale):
@@ -77,13 +78,25 @@ TriceratopsSheets = {
 "Die" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Triceratops/die_rino.png"),(64,64),2)
 }
 
+MinionSheets = {
+"Idle" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Minion/idle_minion.png"),(16,32),2),
+"Walk" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Minion/walk_minion.png"),(16,32),2),
+"Attack" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Minion/attack_minion.png"),(30,32),2),
+"Die" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Minion/die_minion.png"),(16,32),2)
+}
+
 ItemSheets = {
-"Shoot": pg.image.load("Recursos/Sprites/Items/shoot.png"),
+"Shoot": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/shoot.png"),(64,64),1),
 "BarLife": pg.image.load("Recursos/Graficos/Foregrounds/barlife.png"),
+"BarLifePro": pg.image.load("Recursos/Graficos/Foregrounds/barlifepro.png"),
 "RinoBarLife": pg.image.load("Recursos/Graficos/Foregrounds/rino_barlife.png"),
-"Impacto1":  pg.image.load("Recursos/Sprites/Items/impactonaranja.png"),
-"Impacto":  pg.image.load("Recursos/Sprites/Items/impactoazul.png"),
-"Fire":  pg.image.load("Recursos/Sprites/Items/fire.png")
+"Impacto1": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/impactonaranja.png"),(64,64),1),
+"Impacto": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/impactoazul.png"),(80,80),1),
+"Fire": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/fire.png"),(96,96),1),
+"Orbeki": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbki.png"),(32,32),1),
+"Orbevida":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbvida.png"),(32,32),1),
+"Orbeexp": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbexp.png"),(32,32),1),
+"Orbetrampa": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbtrampa.png"),(32,32),1)
 }
 
 Level1Graficos = {

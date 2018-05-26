@@ -47,8 +47,8 @@ class Goku(pg.sprite.Sprite):
         self.orbevictoria = False
         self.vidamax = 180
         self.vida = 180
-        self.kimax = 100
-        self.ki = 100
+        self.kimax = 96
+        self.ki = 96
         self.puno = False
         self.fpuno = False
         self.puno2 = False
@@ -65,9 +65,18 @@ class Goku(pg.sprite.Sprite):
         self.f = False
         self.fdano = True
         self.danotick = True
-        self.dano = 5
-        self.poder = 5
+
+
+        self.exp = 0
+        self.nivel = 1
+
+        self.dano = 5*self.nivel
+        self.poder = 5*self.nivel+self.nivel
+        self.resistencia = self.nivel*5
+
         self.live = True
+
+
 
     def disparar(self):
         b = Shoot(self.rect.center, self.dir,0,self.dano+self.poder+20)
@@ -106,6 +115,15 @@ class Goku(pg.sprite.Sprite):
                     self.target[0] = en
                     en.vida -= d
 
+    def subirnivel(self):
+        self.exp = 0
+        self.nivel += 1
+        self.dano = 5*self.nivel
+        self.poder = 5*self.nivel+self.nivel
+        self.resistencia = self.nivel*5
+        self.vida = self.vidamax
+        self.ki = self.kimax
+
     def update(self):
         global Global_posicion_x
         global Global_posicion_y
@@ -113,7 +131,6 @@ class Goku(pg.sprite.Sprite):
         global Global_speed_y
         self.xspeed = 0
         self.yspeed = 0
-
         #Vive?
         if self.vida > 0:
             #Teclas
@@ -199,9 +216,9 @@ class Goku(pg.sprite.Sprite):
                 self.anim = "Walk"
 
             #Colisiones con los muros
-            if self.live:
-                self.rect.x += self.xspeed
-                self.rect.y += self.yspeed
+
+            self.rect.x += self.xspeed
+            self.rect.y += self.yspeed
 
             collisions = pg.sprite.spritecollide(self,c.Grupos["muros"],False)
 
@@ -223,18 +240,33 @@ class Goku(pg.sprite.Sprite):
                 if orb.tipo == "Ki":
                     if self.ki + 20 > self.kimax:
                         self.ki = self.kimax
+                        text = TextoFlotante((self.rect.x,self.rect.y),"+full ki",c.AZUL)
+                        c.Grupos["todos"].add(text)
                     else:
+                        text = TextoFlotante((self.rect.x,self.rect.y),"+20 ki",c.AZUL)
+                        c.Grupos["todos"].add(text)
                         self.ki += 20
                 elif orb.tipo == "Vida":
                     if self.vida + 50 > self.vidamax:
                         self.vida = self.vidamax
+                        text = TextoFlotante((self.rect.x,self.rect.y),"+full vida",c.VERDE)
+                        c.Grupos["todos"].add(text)
                     else:
                         self.vida += 50
+                        text = TextoFlotante((self.rect.x,self.rect.y),"+50 vida",c.VERDE)
+                        c.Grupos["todos"].add(text)
                 elif orb.tipo == "Trampa":
-                    self.vida -= 60
+                    self.vida -= 10
+                    text = TextoFlotante((self.rect.x,self.rect.y),"-10 vida",c.ROJO)
+                    c.Grupos["todos"].add(text)
 
-                elif orb.tipo == "Fuerza":
-                    self.orbevictoria = True
+                elif orb.tipo == "Exp":
+                    self.exp += 10
+                    if self.exp >= (self.nivel*20+20):
+                        self.subirnivel()
+
+                    text = TextoFlotante((self.rect.x,self.rect.y),"+10 exp",c.AMARILLO)
+                    c.Grupos["todos"].add(text)
 
                 im = Impacto(self.rect.center, 0)
                 c.Grupos["todos"].add(im)
@@ -245,9 +277,10 @@ class Goku(pg.sprite.Sprite):
                 collide = pg.sprite.collide_circle(self,en)
                 if collide:
                     if self.fdano:
-                        self.vida -= en.cdano
+                        danototal = (en.cdano-(self.resistencia*en.cdano/100))
+                        self.vida -= danototal
                         im = Impacto(self.rect.center, 0)
-                        text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(en.cdano),c.ROJO)
+                        text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(danototal),c.ROJO)
                         c.Grupos["todos"].add(text)
 
                         c.Grupos["todos"].add(im)
@@ -264,9 +297,10 @@ class Goku(pg.sprite.Sprite):
             collisions = pg.sprite.spritecollide(self,c.Grupos["shootsenemigos"],False)
 
             for b in collisions:
-                self.vida -= b.dano
+                danototal = (en.dano-(self.resistencia*en.dano/100))
+                self.vida -= (en.dano-(self.resistencia*en.dano/100))
                 im = Impacto(self.rect.center, 0)
-                text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(b.dano),c.ROJO)
+                text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(danototal),c.ROJO)
                 c.Grupos["todos"].add(text)
                 c.Grupos["todos"].add(im)
                 b.kill()
@@ -427,10 +461,30 @@ class Triceratops(pg.sprite.Sprite):
         self.dano = 50
         self.cdano = 10
 
+        self.flagdie = False
+
     def disparar(self):
         b = Shoot(self.rect.center, self.dir, 1,self.dano)
         c.Grupos["shootsenemigos"].add(b)
         c.Grupos["todos"].add(b)
+
+    def generarrecompensa(self):
+        n = random.randrange(3,20)
+        for i in range(n):
+            x = random.randrange(-128,128)
+            y = random.randrange(-128,128)
+            t = random.randrange(0,3)
+            if t == 0:
+                tipo = "Ki"
+            elif t==1:
+                tipo = "Vida"
+            elif t==2:
+                tipo = "Exp"
+            orb = Orbes(tipo,(self.rect.centerx+x-Global_posicion_x,self.rect.centery+y-Global_posicion_y))
+            #orb = Orbes(tipo,(512+x,512+y))
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
+
 
     def update(self):
         self.rect.x = self.init_x + Global_posicion_x
@@ -507,6 +561,10 @@ class Triceratops(pg.sprite.Sprite):
                 self.vida -= b.dano
 
         if self.vida <= 0:
+
+            if not self.flagdie :
+                self.generarrecompensa()
+                self.flagdie = True
             #self.target[0] = None
             self.live = False
             #self.kill()
@@ -551,10 +609,10 @@ class Impacto(pg.sprite.Sprite):
             self.tipo = tipo
             self.frames = 0
             if self.tipo == 0:
-                self.MatrizAnimations = recortarAnimacion(c.ItemSheets["Impacto"],(80,80),1)
+                self.MatrizAnimations = c.ItemSheets["Impacto"]
                 self.frames = 8
             elif self.tipo == 1:
-                self.MatrizAnimations = recortarAnimacion(c.ItemSheets["Impacto1"],(64,64),1)
+                self.MatrizAnimations = c.ItemSheets["Impacto1"]
                 self.frames = 5
             self.image = self.MatrizAnimations[0][0]
             #self.image.fill(c.ROJO)
@@ -632,10 +690,10 @@ class Shoot(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.tipo = t
         if self.tipo == 0:
-            self.MatrizAnimations = recortarAnimacion(c.ItemSheets["Shoot"],(64,64),1)
+            self.MatrizAnimations = c.ItemSheets["Shoot"]
             self.animlimit = 1
         elif self.tipo ==1:
-            self.MatrizAnimations = recortarAnimacion(c.ItemSheets["Fire"],(96,96),1)
+            self.MatrizAnimations = c.ItemSheets["Fire"]
             self.animlimit = 2
         self.image = self.MatrizAnimations[0][0]
         self.rect = self.image.get_rect()
@@ -691,6 +749,50 @@ class Shoot(pg.sprite.Sprite):
                 self.indexanim = 0
         if (self.rect.right < 0) or (self.rect.left > c.TAMANO_VENTANA[0]) or (self.rect.top > c.TAMANO_VENTANA[1]) or (self.rect.bottom < 0):
             self.kill()
+
+class Orbes(pg.sprite.Sprite):
+        def __init__(self, tipo ,pos):
+            pg.sprite.Sprite.__init__(self)
+            self.tipo = tipo
+            if self.tipo == "Ki":
+                self.MatrizAnimations = c.ItemSheets["Orbeki"]
+            elif self.tipo == "Vida":
+                self.MatrizAnimations = c.ItemSheets["Orbevida"]
+            elif self.tipo == "Exp":
+                self.MatrizAnimations = c.ItemSheets["Orbeexp"]
+            elif self.tipo == "Trampa":
+                self.MatrizAnimations = c.ItemSheets["Orbetrampa"]
+            else:
+                self.MatrizAnimations = c.ItemSheets["Orbeki"]
+                print "Tipo de orbe desconocido, por defecto KI"
+
+            self.image = self.MatrizAnimations[0][0]
+            #self.image.fill(c.ROJO)
+            self.rect = self.image.get_rect()
+            self.rect.x = pos[0]
+            self.rect.y = pos[1]
+            self.init_x = self.rect.x
+            self.init_y = self.rect.y
+            self.layer = 0
+
+            self.indexanim = 0
+            self.speedanim = 5
+            self.n = 0
+
+        def update(self):
+            self.rect.x = self.init_x + Global_posicion_x
+            self.rect.y = self.init_y + Global_posicion_y
+
+            self.image = self.MatrizAnimations[0][self.indexanim]
+
+            if self.n < self.speedanim:
+                self.n +=1
+            else:
+                self.n = 0
+                if self.indexanim < 2:
+                    self.indexanim += 1
+                else:
+                    self.indexanim = 0
 
 class Background(pg.sprite.Sprite):
     def __init__(self,tm):

@@ -439,7 +439,17 @@ class Triceratops(pg.sprite.Sprite):
         if self.timeidle > 1 and not self.shoot and self.live:
             self.timeidle -= 1
         elif self.timeidle == 1:
-            self.dir = random.randrange(0,4)
+            for us in c.Grupos["usuarios"]:
+                if (us.rect.bottom>self.rect.top) and (us.rect.right<self.rect.left):
+                    self.dir = 3
+                elif (us.rect.bottom>self.rect.top) and (us.rect.left>self.rect.right):
+                    self.dir = 1
+                elif (us.rect.bottom<self.rect.top):
+                    self.dir = 2
+                elif (us.rect.top>self.rect.bottom):
+                    self.dir = 0
+                else:
+                    self.dir = random.randrange(0,4)
             self.timeidle -= 1
         else:
             self.shoot = True

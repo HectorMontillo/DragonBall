@@ -30,6 +30,22 @@ def recortarAnimacion(img,size,scale):
             matriz[i].append(frame)
     return matriz
 
+#Grupos Pygame
+
+Grupos = {
+"todos" : pg.sprite.LayeredUpdates(),
+"usuarios" : pg.sprite.Group(),
+"muros" : pg.sprite.Group(),
+"shoots" : pg.sprite.Group(),
+"shootsenemigo"s : pg.sprite.Group(),
+"orbes" : pg.sprite.Group(),
+"enemigos" : pg.sprite.Group()
+}
+
+
+
+
+
 #Diccionarios de Recursos
 GraficosPantallaPrincipal = {
 "LogoUTP" : pg.image.load("Recursos/Graficos/PantallaInicio/logoutp.png"),
@@ -48,17 +64,21 @@ GraficosMenuPrincipal = {
 }
 
 GokuSheets = {
-"Idle": pg.image.load("Recursos/Sprites/Goku/idle_goku.png"),
-"Walk": pg.image.load("Recursos/Sprites/Goku/walk_goku.png"),
-"Run": pg.image.load("Recursos/Sprites/Goku/run_goku.png"),
-"Puno": pg.image.load("Recursos/Sprites/Goku/puno3_goku.png"),
-"Puno2": pg.image.load("Recursos/Sprites/Goku/puno2_goku.png"),
-"Shoot": pg.image.load("Recursos/Sprites/Goku/shoot_goku.png")
+"Idle":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/idle_goku.png"),(17,33),2),
+"Walk":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/walk_goku.png"),(17,33),2),
+"Run":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/run_goku.png"),(21,33),2),
+"Puno":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/puno3_goku.png"),(28,33),2),
+"Puno2":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/puno2_goku.png"),(28,33),2),
+"Shoot":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/shoot_goku.png"),(28,33),2),
+"Die":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Goku/die_goku.png"),(32,32),2)
 }
 
+
+
 TriceratopsSheets = {
-"Idle": pg.image.load("Recursos/Sprites/Triceratops/idle_rino.png"),
-"Attack": pg.image.load("Recursos/Sprites/Triceratops/attack_rino.png")
+"Idle" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Triceratops/idle_rino.png"),(64,64),2),
+"Attack" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Triceratops/attack_rino.png"),(64,64),2),
+"Die" : comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Triceratops/die_rino.png"),(64,64),2)
 }
 
 ItemSheets = {
@@ -75,3 +95,16 @@ Level1Graficos = {
 "Palmera" : comp.recortarAnimacion(pg.image.load("Recursos/Graficos/Foregrounds/palmera.png"),(48,76),2),
 "Edificio" : pg.image.load("Recursos/Graficos/Foregrounds/edificio.png"),
 }
+
+'''
+self.aniorbes = {
+"OrbKi" : comp.recortarAnimacion(c.ItemSheets["Ki"],(32,32),1),
+"OrbVida" : comp.recortarAnimacion(c.ItemSheets["Vida"],(32,32),1),
+"OrbFuerza" : comp.recortarAnimacion(c.ItemSheets["Fuerza"],(32,32),1),
+"OrbTrampa" : comp.recortarAnimacion(c.ItemSheets["Trampa"],(32,32),1),
+}
+self.aniCell = {
+"Run" : comp.recortarAnimacion(c.CellSheets["Run"],(52,52),2),
+"Shoot" : comp.recortarAnimacion(c.CellSheets["Shoot"],(64,64),2),
+}
+'''

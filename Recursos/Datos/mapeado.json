@@ -195,6 +195,126 @@
                  "width":122.762,
                  "x":1519.18,
                  "y":742.419
+                }, 
+                {
+                 "height":14.7006640644801,
+                 "id":29,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":44.1019921934403,
+                 "x":1119.78506615299,
+                 "y":709.687230699042
+                }, 
+                {
+                 "height":13.1799057129822,
+                 "id":30,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":45.6227505449383,
+                 "x":1214.57900339636,
+                 "y":614.89329345567
+                }, 
+                {
+                 "height":55.2542201044255,
+                 "id":31,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":184.518679981751,
+                 "x":872.915293759822,
+                 "y":1245.50108987682
+                }, 
+                {
+                 "height":40.0466365894461,
+                 "id":32,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":153.089674050793,
+                 "x":889.1367161758,
+                 "y":1204.94753383687
+                }, 
+                {
+                 "height":24.8390530744666,
+                 "id":33,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":101.890809550363,
+                 "x":915.496527601764,
+                 "y":1180.61540021291
+                }, 
+                {
+                 "height":13.6868251634814,
+                 "id":34,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":56.7749784559234,
+                 "x":938.814822324733,
+                 "y":1166.42165559893
+                }, 
+                {
+                 "height":1117.92033211426,
+                 "id":35,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":26.6877532865474,
+                 "x":1535.04003162993,
+                 "y":1028.96115449244
+                }, 
+                {
+                 "height":90.9360482356428,
+                 "id":36,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":265.889097558565,
+                 "x":1535.04003162993,
+                 "y":2145.89305129979
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -205,7 +325,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"Palmeras",
          "objects":[
                 {
@@ -221,8 +341,8 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":285.666666666667,
-                 "y":618.333333333333
+                 "x":285.667,
+                 "y":618.333
                 }, 
                 {
                  "gid":2,
@@ -238,7 +358,7 @@
                  "visible":true,
                  "width":96,
                  "x":382,
-                 "y":714.666666666667
+                 "y":714.667
                 }, 
                 {
                  "gid":2,
@@ -253,7 +373,7 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":381.833333333333,
+                 "x":381.833,
                  "y":955
                 }, 
                 {
@@ -269,19 +389,35 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":286.333333333333,
-                 "y":1051.33333333333
+                 "x":286.333,
+                 "y":1051.33
+                }, 
+                {
+                 "gid":2,
+                 "height":152,
+                 "id":37,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":1101.55026193536,
+                 "y":716.506078877137
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"Edificios",
          "objects":[
                 {
@@ -297,19 +433,19 @@
                  "type":"",
                  "visible":true,
                  "width":336,
-                 "x":826.666666666667,
+                 "x":826.667,
                  "y":2378
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"Tricepratops",
          "objects":[
                 {
@@ -443,11 +579,11 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }],
- "nextobjectid":29,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "properties":
     {

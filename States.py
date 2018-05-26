@@ -12,7 +12,6 @@ class State():
         self.fin = False
         self.estado_siguiente = estado_siguiente
         self.ventana = pg.display.get_surface()
-        self.setup()
     def update(self):
         pass
     def setup(self):
@@ -34,17 +33,10 @@ class PantallaInicio(State):
         self.text = self.fuente.render("Presione A para ir al menu principal", True, c.NEGRO)
 
     def update(self):
-
-
         key = pg.key.get_pressed()
-
         if key[pg.K_a]:
-            self.fin = True
-
-
-
+            self.quit()
         self.ventana.fill(c.BLANCO)
-
         if self.tran == 1:
             self.ventana.blit(c.GraficosPantallaPrincipal["LogoUTP"],(self.x,self.y))
         elif self.tran == 2:
@@ -53,7 +45,6 @@ class PantallaInicio(State):
             self.ventana.blit(c.GraficosPantallaPrincipal["Presentacion"],(self.x,self.y))
 
         self.ventana.blit(self.text,(c.TAMANO_VENTANA[0]-268,c.TAMANO_VENTANA[1]-32))
-
 
         self.x += self.pow
         if self.x < 99:
@@ -65,7 +56,7 @@ class PantallaInicio(State):
             if self.tran < self.ntran:
                 self.tran += 1
             else:
-                self.fin = True
+                self.quit()
             self.x = -1000
             self.pow = 100
 
@@ -135,16 +126,16 @@ class MenuPrincipal(State):
         if (not key[pg.K_UP]) and (not key[pg.K_RIGHT]) and (not key[pg.K_DOWN]) and (not key[pg.K_LEFT]):
             self.fbtn = False
 
-        if key[pg.K_SPACE] or key[pg.K_MENU] or key[pg.K_KP_ENTER]:
+        if key[pg.K_SPACE] or key[pg.K_RETURN] or key[pg.K_KP_ENTER]:
             if self.n == 0:
                 self.estado_siguiente = "Level1"
-                self.fin = True
+                self.quit()
             elif self.n == 1:
                 self.estado_siguiente = "QUIT"
-                self.fin = True
+                self.quit()
             else:
                 self.estado_siguiente = "Creditos"
-                self.fin = True
+                self.quit()
 
 #------------ESTADO: Prologo--------------------------------------------
 class Prologo(State):
@@ -171,8 +162,9 @@ class Level1(State):
             self.datos = json.load(archivo)
         self.fuente = pg.font.Font(None, 18)
         self.objetivo = self.fuente.render("Objetivo: Encuentra el Orbe ROJO, SPACE: Velociad, A: Golpe, S: Golpe Mejorado, D: Bola de energia", 0, (0, 0, 0))
-
+        self.timewait = 50
         #Grupos
+        '''
         self.todos = pg.sprite.LayeredUpdates()
         self.usuarios = pg.sprite.Group()
         self.muros = pg.sprite.Group()
@@ -180,48 +172,19 @@ class Level1(State):
         self.shootsenemigos = pg.sprite.Group()
         self.orbes = pg.sprite.Group()
         self.enemigos = pg.sprite.Group()
-
+        '''
         comp.Global_posicion_x = -512
         comp.Global_posicion_y = -512
-
-        #Animaciones
-        self.animgoku = {
-        "Idle":comp.recortarAnimacion(c.GokuSheets["Idle"],(17,33),2),
-        "Walk":comp.recortarAnimacion(c.GokuSheets["Walk"],(17,33),2),
-        "Run":comp.recortarAnimacion(c.GokuSheets["Run"],(21,33),2),
-        "Puno":comp.recortarAnimacion(c.GokuSheets["Puno"],(28,33),2),
-        "Puno2":comp.recortarAnimacion(c.GokuSheets["Puno2"],(28,33),2),
-        "Shoot":comp.recortarAnimacion(c.GokuSheets["Shoot"],(28,33),2),
-        }
-        '''
-        self.aniorbes = {
-        "OrbKi" : comp.recortarAnimacion(c.ItemSheets["Ki"],(32,32),1),
-        "OrbVida" : comp.recortarAnimacion(c.ItemSheets["Vida"],(32,32),1),
-        "OrbFuerza" : comp.recortarAnimacion(c.ItemSheets["Fuerza"],(32,32),1),
-        "OrbTrampa" : comp.recortarAnimacion(c.ItemSheets["Trampa"],(32,32),1),
-        }
-        self.aniCell = {
-        "Run" : comp.recortarAnimacion(c.CellSheets["Run"],(52,52),2),
-        "Shoot" : comp.recortarAnimacion(c.CellSheets["Shoot"],(64,64),2),
-        }
-        '''
-        self.aniRino = {
-        "Idle" : comp.recortarAnimacion(c.TriceratopsSheets["Idle"],(64,64),2),
-        "Attack" : comp.recortarAnimacion(c.TriceratopsSheets["Attack"],(64,64),2),
-        }
-
 
         #Objetos
         self.target = [None]
         self.bg = comp.Background(self.tamano_mundo)
-        self.goku = comp.Goku(self.animgoku, self.tamano_mundo,self.muros,self.shoots,self.shootsenemigos,self.orbes,self.enemigos,self.todos,self.target)
+        self.goku = comp.Goku(self.tamano_mundo,self.muros,self.shoots,self.shootsenemigos,self.orbes,self.enemigos,self.todos,self.target)
         self.goku.rect.x = 512
         self.goku.rect.y = 512
 
         #Anadir objetos GRUPO USUARIOS
         self.usuarios.add(self.goku)
-
-
 
         #Anadir objetos GRUPO TODOS
         self.generarjsonmuros()
@@ -230,9 +193,6 @@ class Level1(State):
         self.generarjsonenemigos()
         self.todos.add(self.goku)
         self.generarjsonforeground()
-
-
-
 
     def generarjsonmuros(self):
         for i in self.datos["layers"][1]["objects"]:
@@ -287,17 +247,18 @@ class Level1(State):
         '''
         for i in self.datos["layers"][4]["objects"]:
             pos = (i["x"],i["y"])
-            en = comp.Triceratops(self.aniRino,pos,self.shoots,self.shootsenemigos,self.todos,self.target)
+            en = comp.Triceratops(pos,self.shoots,self.shootsenemigos,self.todos,self.target)
             self.enemigos.add(en)
             self.todos.add(en)
 
 
     def update(self):
+        if not self.goku.live:
+            self.timewait -= 1
 
-        if self.goku.vida<=0:
+        if self.timewait <= 0:
             self.siguiente_estado = "GameOver"
-            self.fin = True
-
+            self.quit()
 
         self.ventana.fill(c.NEGRO)
         self.todos.update()

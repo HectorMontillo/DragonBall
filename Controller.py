@@ -20,10 +20,12 @@ class Control():
             else:
                 self.estado.fin = False
                 self.estado = self.estados[self.estado.estado_siguiente]
+                self.estado.setup()
 
     def preparar_estados(self, estados, estadoinicial):
         if estadoinicial != None:
             self.estado = estadoinicial
+            self.estado.setup()
         else:
             print "Estado inicial debe ser diferente de NONE"
             self.fin = True

@@ -30,7 +30,7 @@ def recortarAnimacion(img,size,scale):
     return matriz
 
 class Goku(pg.sprite.Sprite):
-    def __init__(self, tm, wgroup, bgroup,bgroup2, ogroup, egroup ,all,tar):
+    def __init__(self,tm,tar):
         pg.sprite.Sprite.__init__(self)
         self.dicAnimacion = c.GokuSheets;
         self.image = self.dicAnimacion["Idle"][0][0]
@@ -42,12 +42,6 @@ class Goku(pg.sprite.Sprite):
         self.speed = 3
         self.pxlimit = 256
         self.tm = tm
-        self.wgroup = wgroup
-        self.bgroup = bgroup
-        self.bgroup2 = bgroup2
-        self.ogroup = ogroup
-        self.egroup = egroup
-        self.all = all
         self.layer = 2
         self.target = tar
         self.orbevictoria = False
@@ -77,8 +71,8 @@ class Goku(pg.sprite.Sprite):
 
     def disparar(self):
         b = Shoot(self.rect.center, self.dir,0,self.dano+self.poder+20)
-        self.bgroup.add(b)
-        self.all.add(b)
+        c.Grupos["shoots"].add(b)
+        c.Grupos["todos"].add(b)
 
     def punometod(self):
         pospuno = [0,0]
@@ -101,14 +95,14 @@ class Goku(pg.sprite.Sprite):
             i = Impacto(pospuno,0)
             d = 0
 
-        self.all.add(i)
-        for en in self.egroup:
+        c.Grupos["todos"].add(i)
+        for en in c.Grupos["enemigos"]:
             if en.live:
                 collide = pg.sprite.collide_circle(i,en)
                 if collide:
                     if self.puno or self.puno2:
                         text = TextoFlotante((en.rect.x,en.rect.y),"-{} golpe".format(d),c.ROJO)
-                        self.all.add(text)
+                        c.Grupos["todos"].add(text)
                     self.target[0] = en
                     en.vida -= d
 
@@ -169,7 +163,7 @@ class Goku(pg.sprite.Sprite):
                 self.puno2 = True
                 self.ki -= 2
                 text = TextoFlotante((self.rect.x,self.rect.y),"-2 ki",c.AZUL)
-                self.all.add(text)
+                c.Grupos["todos"].add(text)
                 self.fpuno2 = True
                 self.indexanim = 0
                 self.punometod()
@@ -209,7 +203,7 @@ class Goku(pg.sprite.Sprite):
                 self.rect.x += self.xspeed
                 self.rect.y += self.yspeed
 
-            collisions = pg.sprite.spritecollide(self,self.wgroup,False)
+            collisions = pg.sprite.spritecollide(self,c.Grupos["muros"],False)
 
             for wall in collisions:
                 if self.xspeed > 0 and self.yspeed == 0:
@@ -223,7 +217,7 @@ class Goku(pg.sprite.Sprite):
                     self.rect.top = wall.rect.bottom
 
             #Orb collisions
-            collisions = pg.sprite.spritecollide(self,self.ogroup,False)
+            collisions = pg.sprite.spritecollide(self,c.Grupos["orbes"],False)
 
             for orb in collisions:
                 if orb.tipo == "Ki":
@@ -243,20 +237,20 @@ class Goku(pg.sprite.Sprite):
                     self.orbevictoria = True
 
                 im = Impacto(self.rect.center, 0)
-                self.all.add(im)
+                c.Grupos["todos"].add(im)
                 orb.kill()
 
             #Colisiones con el enemigo
-            for en in self.egroup:
+            for en in c.Grupos["enemigos"]:
                 collide = pg.sprite.collide_circle(self,en)
                 if collide:
                     if self.fdano:
                         self.vida -= en.cdano
                         im = Impacto(self.rect.center, 0)
                         text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(en.cdano),c.ROJO)
-                        self.all.add(text)
+                        c.Grupos["todos"].add(text)
 
-                        self.all.add(im)
+                        c.Grupos["todos"].add(im)
                     else:
                         self.danotick +=1
 
@@ -267,14 +261,14 @@ class Goku(pg.sprite.Sprite):
                 self.fdano = False
 
             #Coliciones con los proyectiles enemigos
-            collisions = pg.sprite.spritecollide(self,self.bgroup2,False)
+            collisions = pg.sprite.spritecollide(self,c.Grupos["shootsenemigos"],False)
 
             for b in collisions:
                 self.vida -= b.dano
                 im = Impacto(self.rect.center, 0)
                 text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(b.dano),c.ROJO)
-                self.all.add(text)
-                self.all.add(im)
+                c.Grupos["todos"].add(text)
+                c.Grupos["todos"].add(im)
                 b.kill()
 
 
@@ -293,7 +287,7 @@ class Goku(pg.sprite.Sprite):
                         self.disparar()
                         self.punometod()
                         text = TextoFlotante((self.rect.x,self.rect.y),"-5 ki",c.AZUL)
-                        self.all.add(text)
+                        c.Grupos["todos"].add(text)
 
 
                 elif self.anim == "Puno2":
@@ -403,7 +397,7 @@ class Goku(pg.sprite.Sprite):
                 self.image = self.dicAnimacion["Die"][0][3]
 
 class Triceratops(pg.sprite.Sprite):
-    def __init__(self,pos, bgroup,bgroup2,all,tar):
+    def __init__(self,pos,tar):
         pg.sprite.Sprite.__init__(self)
         self.name = "Rino"
         self.MatrizAnimations = c.TriceratopsSheets;
@@ -414,13 +408,8 @@ class Triceratops(pg.sprite.Sprite):
         self.init_x = self.rect.x
         self.init_y = self.rect.y
         self.live = True
-
-        self.bgroup = bgroup
-        self.bgroup2 = bgroup2
         self.target = tar
-        self.all = all
         self.layer = 1
-
         self.vidamax = 456
         self.vida = 456
 
@@ -440,8 +429,8 @@ class Triceratops(pg.sprite.Sprite):
 
     def disparar(self):
         b = Shoot(self.rect.center, self.dir, 1,self.dano)
-        self.bgroup2.add(b)
-        self.all.add(b)
+        c.Grupos["shootsenemigos"].add(b)
+        c.Grupos["todos"].add(b)
 
     def update(self):
         self.rect.x = self.init_x + Global_posicion_x
@@ -497,13 +486,13 @@ class Triceratops(pg.sprite.Sprite):
 
 
         if self.live:
-            collisions = pg.sprite.spritecollide(self,self.bgroup,False)
+            collisions = pg.sprite.spritecollide(self,c.Grupos["shoots"],False)
             for b in collisions:
                 self.target[0] = self
                 text = TextoFlotante((self.rect.x,self.rect.y),"-{} bola de energia".format(b.dano),c.ROJO)
-                self.all.add(text)
+                c.Grupos["todos"].add(text)
                 im = Impacto(self.rect.center,1)
-                self.all.add(im)
+                c.Grupos["todos"].add(im)
                 b.kill()
                 self.vida -= b.dano
 

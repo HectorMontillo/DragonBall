@@ -37,14 +37,10 @@ Grupos = {
 "usuarios" : pg.sprite.Group(),
 "muros" : pg.sprite.Group(),
 "shoots" : pg.sprite.Group(),
-"shootsenemigo"s : pg.sprite.Group(),
+"shootsenemigos" : pg.sprite.Group(),
 "orbes" : pg.sprite.Group(),
 "enemigos" : pg.sprite.Group()
 }
-
-
-
-
 
 #Diccionarios de Recursos
 GraficosPantallaPrincipal = {

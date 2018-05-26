@@ -163,93 +163,77 @@ class Level1(State):
         self.fuente = pg.font.Font(None, 18)
         self.objetivo = self.fuente.render("Objetivo: Encuentra el Orbe ROJO, SPACE: Velociad, A: Golpe, S: Golpe Mejorado, D: Bola de energia", 0, (0, 0, 0))
         self.timewait = 50
-        #Grupos
-        '''
-        self.todos = pg.sprite.LayeredUpdates()
-        self.usuarios = pg.sprite.Group()
-        self.muros = pg.sprite.Group()
-        self.shoots = pg.sprite.Group()
-        self.shootsenemigos = pg.sprite.Group()
-        self.orbes = pg.sprite.Group()
-        self.enemigos = pg.sprite.Group()
-        '''
+
         comp.Global_posicion_x = -512
         comp.Global_posicion_y = -512
 
         #Objetos
         self.target = [None]
         self.bg = comp.Background(self.tamano_mundo)
-        self.goku = comp.Goku(self.tamano_mundo,self.muros,self.shoots,self.shootsenemigos,self.orbes,self.enemigos,self.todos,self.target)
+        self.goku = comp.Goku(self.tamano_mundo,self.target)
         self.goku.rect.x = 512
         self.goku.rect.y = 512
 
         #Anadir objetos GRUPO USUARIOS
-        self.usuarios.add(self.goku)
+        c.Grupos["usuarios"].add(self.goku)
 
         #Anadir objetos GRUPO TODOS
         self.generarjsonmuros()
-        self.todos.add(self.bg)
+        c.Grupos["todos"].add(self.bg)
         #self.generarjsonorbes()
         self.generarjsonenemigos()
-        self.todos.add(self.goku)
+        c.Grupos["todos"].add(self.goku)
         self.generarjsonforeground()
 
     def generarjsonmuros(self):
         for i in self.datos["layers"][1]["objects"]:
             possize = (i["x"],i["y"],i["width"],i["height"])
             m = comp.Muro(possize)
-            self.muros.add(m)
-            self.todos.add(m)
+            c.Grupos["muros"].add(m)
+            c.Grupos["todos"].add(m)
 
     def generarjsonforeground(self):
         for i in self.datos["layers"][3]["objects"]:
             pos = (i["x"],i["y"]-i["height"])
             m = comp.Edificio(pos)
-            self.todos.add(m)
+            c.Grupos["todos"].add(m)
         for i in self.datos["layers"][2]["objects"]:
             pos = (i["x"],i["y"]-i["height"])
             m = comp.Palmera(pos)
-            self.todos.add(m)
+            c.Grupos["todos"].add(m)
 
     def generarjsonorbes(self):
         for i in self.datos["layers"][2]["objects"]:
             pos = (i["x"],i["y"])
             orb = comp.Orbes(self.aniorbes["OrbKi"],pos)
             orb.tipo = "Ki"
-            self.orbes.add(orb)
-            self.todos.add(orb)
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
         for i in self.datos["layers"][3]["objects"]:
             pos = (i["x"],i["y"])
             orb = comp.Orbes(self.aniorbes["OrbVida"],pos)
             orb.tipo = "Vida"
-            self.orbes.add(orb)
-            self.todos.add(orb)
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
         for i in self.datos["layers"][4]["objects"]:
             pos = (i["x"],i["y"])
             orb = comp.Orbes(self.aniorbes["OrbFuerza"],pos)
             orb.tipo = "Fuerza"
-            self.orbes.add(orb)
-            self.todos.add(orb)
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
         for i in self.datos["layers"][5]["objects"]:
             pos = (i["x"],i["y"])
             orb = comp.Orbes(self.aniorbes["OrbTrampa"],pos)
             orb.tipo = "Trampa"
-            self.orbes.add(orb)
-            self.todos.add(orb)
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
 
     def generarjsonenemigos(self):
-        '''
-        for i in self.datos["layers"][6]["objects"]:
-            pos = (i["x"],i["y"])
-            en = comp.EnemigoDinamico(self.aniCell,pos,self.muros,self.shoots,self.shootsenemigos,self.todos,self.target)
-            self.enemigosdinamicos.add(en)
-            self.todos.add(en)
-        '''
         for i in self.datos["layers"][4]["objects"]:
             pos = (i["x"],i["y"])
-            en = comp.Triceratops(pos,self.shoots,self.shootsenemigos,self.todos,self.target)
-            self.enemigos.add(en)
-            self.todos.add(en)
+            en = comp.Triceratops(pos,self.target)
+            c.Grupos["enemigos"].add(en)
+            c.Grupos["todos"].add(en)
 
 
     def update(self):
@@ -261,8 +245,8 @@ class Level1(State):
             self.quit()
 
         self.ventana.fill(c.NEGRO)
-        self.todos.update()
-        self.todos.draw(self.ventana)
+        c.Grupos["todos"].update()
+        c.Grupos["todos"].draw(self.ventana)
         pg.draw.rect(self.ventana,(100,100,100),(80,46,self.goku.vidamax, 18))
         pg.draw.rect(self.ventana,(0,255,0),(80,46,self.goku.vida, 18))
         pg.draw.rect(self.ventana,(100,100,100),(80,64,self.goku.kimax, 12))

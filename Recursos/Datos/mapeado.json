@@ -601,7 +601,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"Orbeski",
          "objects":[
                 {
@@ -736,8 +736,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":190.666666666667,
-                 "y":1153.33333333333
+                 "x":190.667,
+                 "y":1153.33
                 }, 
                 {
                  "height":0,
@@ -751,7 +751,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":218.666666666667,
+                 "x":218.667,
                  "y":1124
                 }, 
                 {
@@ -767,7 +767,7 @@
                  "visible":true,
                  "width":0,
                  "x":220,
-                 "y":1177.33333333333
+                 "y":1177.33
                 }, 
                 {
                  "height":0,
@@ -782,18 +782,18 @@
                  "visible":true,
                  "width":0,
                  "x":256,
-                 "y":1150.66666666667
+                 "y":1150.67
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"Orbesvida",
          "objects":[
                 {
@@ -919,13 +919,13 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"OrbesTrampa",
          "objects":[
                 {
@@ -1426,18 +1426,18 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":1,
+         "height":0,
          "name":"Minions",
          "objects":[
                 {
                  "height":0,
-                 "id":118,
+                 "id":146,
                  "name":"",
                  "properties":
                     {
@@ -1447,17 +1447,17 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":952,
-                 "y":681.333333333333
+                 "x":960,
+                 "y":717.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":1,
+         "width":0,
          "x":0,
          "y":0
         }],
- "nextobjectid":124,
+ "nextobjectid":147,
  "orientation":"orthogonal",
  "properties":
     {

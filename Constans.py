@@ -98,7 +98,8 @@ ItemSheets = {
 "Orbeki": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbki.png"),(32,32),1),
 "Orbevida":comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbvida.png"),(32,32),1),
 "Orbeexp": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbexp.png"),(32,32),1),
-"Orbetrampa": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbtrampa.png"),(32,32),1)
+"Orbetrampa": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/orbtrampa.png"),(32,32),1),
+"Spawn": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/spawn.png"),(64,96),2)
 }
 
 #print ItemSheets["Shoot_Minion"]

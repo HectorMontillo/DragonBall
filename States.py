@@ -230,9 +230,9 @@ class Level1(State):
             c.Grupos["enemigos"].add(en)
             c.Grupos["todos"].add(en)
         for i in self.datos["layers"][8]["objects"]:
-            pos = (i["x"]+comp.Global_posicion_x,i["y"]+comp.Global_posicion_y)
-            en = comp.Minion(pos,self.target)
-            c.Grupos["enemigos"].add(en)
+            pos = (i["x"],i["y"])
+            en = comp.GeneradorMinions(pos,self.target)
+            #c.Grupos["enemigos"].add(en)
             c.Grupos["todos"].add(en)
 
 

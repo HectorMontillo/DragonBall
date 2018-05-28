@@ -282,7 +282,6 @@ class Goku(pg.sprite.Sprite):
                         im = Impacto(self.rect.center, 0)
                         text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(danototal),c.ROJO)
                         c.Grupos["todos"].add(text)
-
                         c.Grupos["todos"].add(im)
                     else:
                         self.danotick +=1
@@ -568,6 +567,58 @@ class Triceratops(pg.sprite.Sprite):
             #self.target[0] = None
             self.live = False
             #self.kill()
+
+class GeneradorMinions(pg.sprite.Sprite):
+    def __init__(self,pos,tar):
+        pg.sprite.Sprite.__init__(self)
+        self.image = c.ItemSheets["Spawn"][0][0]
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.init_x = self.rect.x
+        self.init_y = self.rect.y
+        self.target = tar
+        
+
+        self.timespawn = 100
+        self.n = 0
+        self.cont = 0
+        self.indexanim = 0
+        self.speedanim = 3
+
+
+    def update(self):
+        self.rect.x = self.init_x + Global_posicion_x
+        self.rect.y = self.init_y + Global_posicion_y
+
+        if (self.rect.top < c.TAMANO_VENTANA[1] and self.rect.left < c.TAMANO_VENTANA[0] and self.rect.right > 0 and self.rect.bottom > 0):
+            if self.n < self.timespawn:
+                self.n+=1
+                self.image = c.ItemSheets["Spawn"][0][0]
+                self.indexanim = 0
+            else:
+
+                if self.cont < self.speedanim:
+                    self.cont += 1
+                else:
+                    self.cont = 0
+                    if self.indexanim < 12:
+                        self.indexanim += 1
+                    else:
+                        self.indexanim= 0
+                        self.n = 0
+                        cant = random.randrange(1,4)
+                        for i in range(cant):
+                            x = random.randrange(-128,128)
+                            y = random.randrange(-128,128)
+                            pos = (self.rect.centerx+x,self.rect.centery+y)
+                            minion = Minion(pos,self.target)
+                            im = Impacto(pos,0)
+                            c.Grupos["todos"].add(im)
+                            c.Grupos["enemigos"].add(minion)
+                            c.Grupos["todos"].add(minion)
+
+                self.image = c.ItemSheets["Spawn"][0][self.indexanim]
 
 class Minion(pg.sprite.Sprite):
     def __init__(self,pos,tar):

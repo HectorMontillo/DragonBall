@@ -137,7 +137,7 @@ class MenuPrincipal(State):
                 self.estado_siguiente = "Creditos"
                 self.quit()
 
-#------------ESTADO: Prologo--------------------------------------------
+#------------ESTADO: Prologo--------------------------------------------------
 class Prologo(State):
     def __init__(self,caption,estado_siguiente):
         State.__init__(self,caption,estado_siguiente)
@@ -153,6 +153,14 @@ class Prologo(State):
         self.ventana.fill(c.NEGRO)
         self.ventana.blit(self.texto,(100,100))
 
+#------------ESTADO: Tutorial--------------------------------------------------
+class Level(State):
+    def __init__(self,caption,estado_siguiente):
+        State.__init__(self,caption,estado_siguiente)
+        pass
+
+    def update(self):
+        pass
 #------------ESTADO: Level 1--------------------------------------------
 class Level1(State):
     def __init__(self,caption,estado_siguiente):
@@ -252,7 +260,7 @@ class Level1(State):
         pg.draw.rect(self.ventana,(100,100,100),(80,64,self.goku.kimax, 12))
         pg.draw.rect(self.ventana,(0,0,255),(80,64,self.goku.ki, 12))
         self.ventana.blit(c.ItemSheets["BarLifePro"],(16,16))
-        nivelexp = self.fuente.render("Exp {}/{}, Nivel {}".format(self.goku.exp,self.goku.nivel*20+20,self.goku.nivel),True,c.NEGRO)
+        nivelexp = self.fuente.render("Exp {}/{}, Nivel {}".format(self.goku.exp,self.goku.expsiguientenivel,self.goku.nivel),True,c.NEGRO)
         fuerza =  self.fuente2.render("{}".format(self.goku.dano),True,c.BLANCO)
         poder =  self.fuente2.render("{}".format(self.goku.poder),True,c.BLANCO)
         resistencia =  self.fuente2.render("{}%".format(self.goku.resistencia),True,c.BLANCO)

@@ -66,13 +66,20 @@ class Goku(pg.sprite.Sprite):
         self.fdano = True
         self.danotick = True
 
+        self.factordenivel = 2
+        self.aumentobasenivel = 50
+        self.factorderesistencia = 2
+        self.danobase = 5
+        self.poderbase = 5
+
 
         self.exp = 0
-        self.nivel = 1
+        self.nivel = 20
+        self.expsiguientenivel = (self.factordenivel**self.nivel)*self.factordenivel+100
 
-        self.dano = 5*self.nivel
-        self.poder = 5*self.nivel+self.nivel
-        self.resistencia = self.nivel*5
+        self.dano = self.danobase*self.nivel/2
+        self.poder = self.poderbase*self.nivel/2
+        self.resistencia = self.nivel*self.factorderesistencia
 
         self.live = True
 
@@ -118,9 +125,11 @@ class Goku(pg.sprite.Sprite):
     def subirnivel(self):
         self.exp = 0
         self.nivel += 1
-        self.dano = 5*self.nivel
-        self.poder = 5*self.nivel+self.nivel
-        self.resistencia = self.nivel*5
+        self.expsiguientenivel = (self.factordenivel**self.nivel)*self.factordenivel
+
+        self.dano = self.danobase*self.nivel/3
+        self.poder = self.poderbase*self.nivel/2
+        self.resistencia = self.nivel*self.factorderesistencia
         self.vida = self.vidamax
         self.ki = self.kimax
 
@@ -173,6 +182,7 @@ class Goku(pg.sprite.Sprite):
             if keystate[pg.K_a] and (not self.fpuno) and (not self.fpuno2) and (not self.fshoot) and (not self.puno):
                 self.puno = True
                 self.fpuno = True
+                #self.subirnivel()
                 self.indexanim = 0
                 self.punometod()
 
@@ -262,7 +272,7 @@ class Goku(pg.sprite.Sprite):
 
                 elif orb.tipo == "Exp":
                     self.exp += 10
-                    if self.exp >= (self.nivel*20+20):
+                    if self.exp >= (self.expsiguientenivel):
                         self.subirnivel()
 
                     text = TextoFlotante((self.rect.x,self.rect.y),"+10 exp",c.AMARILLO)
@@ -274,23 +284,28 @@ class Goku(pg.sprite.Sprite):
 
             #Colisiones con el enemigo
             for en in c.Grupos["enemigos"]:
+
                 collide = pg.sprite.collide_circle(self,en)
                 if collide:
                     if self.fdano:
+                        print en.name
                         danototal = (en.cdano-(self.resistencia*en.cdano/100))
                         self.vida -= danototal
                         im = Impacto(self.rect.center, 0)
                         text = TextoFlotante((self.rect.x,self.rect.y),"-{} vida".format(danototal),c.ROJO)
                         c.Grupos["todos"].add(text)
                         c.Grupos["todos"].add(im)
-                    else:
-                        self.danotick +=1
 
+
+            self.danotick +=1
             if self.danotick == 30:
                 self.danotick = 0
                 self.fdano = True
             else:
+
                 self.fdano = False
+
+
 
             #Coliciones con los proyectiles enemigos
             collisions = pg.sprite.spritecollide(self,c.Grupos["shootsenemigos"],False)
@@ -468,7 +483,14 @@ class Triceratops(pg.sprite.Sprite):
         c.Grupos["todos"].add(b)
 
     def generarrecompensa(self):
-        n = random.randrange(3,20)
+        n = random.randrange(9,20)
+        for i in range(3):
+            x = random.randrange(-128,128)
+            y = random.randrange(-128,128)
+            orb = Orbes("Exp",(self.rect.centerx+x-Global_posicion_x,self.rect.centery+y-Global_posicion_y))
+            #orb = Orbes(tipo,(512+x,512+y))
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
         for i in range(n):
             x = random.randrange(-128,128)
             y = random.randrange(-128,128)
@@ -578,9 +600,9 @@ class GeneradorMinions(pg.sprite.Sprite):
         self.init_x = self.rect.x
         self.init_y = self.rect.y
         self.target = tar
-        
 
-        self.timespawn = 100
+
+        self.timespawn = 500
         self.n = 0
         self.cont = 0
         self.indexanim = 0
@@ -637,6 +659,7 @@ class Minion(pg.sprite.Sprite):
         self.dano = 10
         self.flagdie = True
         self.live = True
+        self.radius = 50
 
         #self.ventana = pg.display.get_surface()
         self.vidamax = 113
@@ -657,7 +680,14 @@ class Minion(pg.sprite.Sprite):
         self.contidle = 0
 
     def generarrecompensa(self):
-        n = random.randrange(3,10)
+        n = random.randrange(3,6)
+        for i in range(1):
+            x = random.randrange(-128,128)
+            y = random.randrange(-128,128)
+            orb = Orbes("Exp",(self.rect.centerx+x-Global_posicion_x,self.rect.centery+y-Global_posicion_y))
+            #orb = Orbes(tipo,(512+x,512+y))
+            c.Grupos["orbes"].add(orb)
+            c.Grupos["todos"].add(orb)
         for i in range(n):
             x = random.randrange(-128,128)
             y = random.randrange(-128,128)
@@ -689,6 +719,45 @@ class Minion(pg.sprite.Sprite):
                 self.speed = 0
 
             for us in c.Grupos["usuarios"]:
+                '''
+                if (us.rect.right<self.rect.left) and (us.rect.bottom<self.rect.top):
+                    self.dir = 3
+
+                elif (us.rect.left <= self.rect.right) and (us.rect.right >= self.rect.left) and (us.rect.bottom<self.rect.top):
+                    self.dir = 2
+
+                elif (us.rect.left>self.rect.right) and (us.rect.bottom<self.rect.top):
+                    self.dir = 1
+
+                elif (us.rect.right<self.rect.left) and (us.rect.top>self.rect.bottom):
+                    self.dir = 3
+
+                elif (us.rect.left <= self.rect.right) and (us.rect.right >= self.rect.left) and (us.rect.top>self.rect.bottom):
+                    self.dir = 0
+
+                elif (us.rect.left>self.rect.right) and (us.rect.top>self.rect.bottom):
+                    self.dir = 1
+
+                elif (us.rect.top<=self.rect.bottom) and (us.rect.top>=self.rect.top) and (us.rect.right<=self.rect.left):
+                    self.dir = 3
+
+                elif (us.rect.top<=self.rect.bottom) and (us.rect.top>=self.rect.top) and (us.rect.left>=self.rect.right):
+                    self.dir = 1
+
+                else:
+                    self.dir = 1
+                '''
+
+                if (us.rect.centerx<self.rect.centerx) and (us.rect.centery<self.rect.centery):
+                    self.dir = 3
+                elif (us.rect.centerx>self.rect.centerx) and (us.rect.centery<self.rect.centery):
+                    self.dir = 1
+                elif (us.rect.centerx<self.rect.centerx) and (us.rect.centery>self.rect.centery):
+                    self.dir = 1
+                elif (us.rect.centerx>self.rect.centerx) and (us.rect.centery>self.rect.centery):
+                    self.dir = 1
+
+
                 if (us.rect.bottom>self.rect.top) and (us.rect.right<self.rect.left):
                     self.dir = 3
                 elif (us.rect.bottom>self.rect.top) and (us.rect.left>self.rect.right):
@@ -698,7 +767,8 @@ class Minion(pg.sprite.Sprite):
                 elif (us.rect.top>self.rect.bottom):
                     self.dir = 0
                 else:
-                    self.dir = random.randrange(0,4)
+                    pass
+                    #self.dir = random.randrange(0,4)
 
             if self.dir == 0:
                 self.yspeed = Global_speed_y + self.speed

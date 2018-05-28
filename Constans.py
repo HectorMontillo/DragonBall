@@ -104,6 +104,11 @@ ItemSheets = {
 
 #print ItemSheets["Shoot_Minion"]
 
+LevelTutorial = {
+"Background" : pg.image.load("Recursos/Graficos/Backgrounds/background_tutorial.png")
+
+}
+
 Level1Graficos = {
 "Background": pg.image.load("Recursos/Graficos/Backgrounds/Background.png"),
 "Palmera" : comp.recortarAnimacion(pg.image.load("Recursos/Graficos/Foregrounds/palmera.png"),(48,76),2),

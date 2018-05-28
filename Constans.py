@@ -32,7 +32,10 @@ def recortarAnimacion(img,size,scale):
     return matriz
 
 #Grupos Pygame
-
+def limpiargrupos():
+    for i in Grupos:
+        i.empty()
+        
 Grupos = {
 "todos" : pg.sprite.LayeredUpdates(),
 "usuarios" : pg.sprite.Group(),

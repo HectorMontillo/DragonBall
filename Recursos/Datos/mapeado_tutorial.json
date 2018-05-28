@@ -1,0 +1,43 @@
+{ "height":1,
+ "layers":[
+        {
+         "data":[1],
+         "height":1,
+         "name":"Capa de Patrones 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":1,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "renderorder":"right-down",
+ "tileheight":1790,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/..\/..\/..\/DragonBall\/background_tutorialx2.png",
+         "imageheight":1790,
+         "imagewidth":2692,
+         "margin":0,
+         "name":"background_tutorialx2",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1790,
+         "tilewidth":2692,
+         "transparentcolor":"#ff00ff"
+        }],
+ "tilewidth":2692,
+ "version":1,
+ "width":1
+}

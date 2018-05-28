@@ -1120,15 +1120,14 @@ class Orbes(pg.sprite.Sprite):
                     self.indexanim = 0
 
 class Background(pg.sprite.Sprite):
-    def __init__(self,tm):
+    def __init__(self,tm,img):
         pg.sprite.Sprite.__init__(self)
-        self.image =  pg.transform.scale(c.Level1Graficos["Background"], tm)
+        self.image =  pg.transform.scale(img, tm)
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 0
         self.init_x = self.rect.x
         self.init_y = self.rect.y
-        self.layer = 3
 
     def update(self):
         self.rect.x = self.init_x + Global_posicion_x

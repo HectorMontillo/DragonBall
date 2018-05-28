@@ -462,146 +462,6 @@
         {
          "draworder":"topdown",
          "height":0,
-         "name":"Tricepratops",
-         "objects":[
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":21,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":1300,
-                 "y":864
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":25,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":1296,
-                 "y":1790
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":26,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":790,
-                 "y":1808
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":27,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":1302,
-                 "y":2332
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":28,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":824,
-                 "y":2166
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":70,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":96,
-                 "y":686
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":71,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":102,
-                 "y":1778
-                }, 
-                {
-                 "gid":4,
-                 "height":64,
-                 "id":72,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":114,
-                 "y":2614
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "width":0,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":0,
          "name":"Orbeski",
          "objects":[
                 {
@@ -1433,6 +1293,146 @@
         {
          "draworder":"topdown",
          "height":0,
+         "name":"Triceratops",
+         "objects":[
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":21,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1300,
+                 "y":864
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":25,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1296,
+                 "y":1790
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":26,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":790,
+                 "y":1808
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":27,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1302,
+                 "y":2332
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":28,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":824,
+                 "y":2166
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":70,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":96,
+                 "y":686
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":71,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":102,
+                 "y":1778
+                }, 
+                {
+                 "gid":4,
+                 "height":64,
+                 "id":72,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":114,
+                 "y":2614
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":0,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":0,
          "name":"Minions",
          "objects":[
                 {
@@ -1448,7 +1448,7 @@
                  "visible":true,
                  "width":0,
                  "x":960,
-                 "y":717.333333333333
+                 "y":717.333
                 }],
          "opacity":1,
          "type":"objectgroup",

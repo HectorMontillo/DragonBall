@@ -19,7 +19,9 @@ class Control():
                 self.fin = True
             else:
                 self.estado.fin = False
+                print "Finalizo: ",self.estado
                 self.estado = self.estados[self.estado.estado_siguiente]
+                print "Inicia: ",self.estado
                 self.estado.setup()
 
     def preparar_estados(self, estados, estadoinicial):

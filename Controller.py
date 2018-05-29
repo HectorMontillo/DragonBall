@@ -19,15 +19,18 @@ class Control():
                 self.fin = True
             else:
                 self.estado.fin = False
-                print "Finalizo: ",self.estado
+                #print "Finalizo: ",self.estado
+                self.estado.reboot()
                 self.estado = self.estados[self.estado.estado_siguiente]
-                print "Inicia: ",self.estado
+                self.estado.boot()
+                #print "Inicia: ",self.estado
                 self.estado.setup()
 
     def preparar_estados(self, estados, estadoinicial):
         if estadoinicial != None:
             self.estado = estadoinicial
             self.estado.setup()
+            self.estado.boot()
         else:
             print "Estado inicial debe ser diferente de NONE"
             self.fin = True

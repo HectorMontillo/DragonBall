@@ -34,8 +34,8 @@ def recortarAnimacion(img,size,scale):
 #Grupos Pygame
 def limpiargrupos():
     for i in Grupos:
-        i.empty()
-        
+        Grupos[i].empty()
+
 Grupos = {
 "todos" : pg.sprite.LayeredUpdates(),
 "usuarios" : pg.sprite.Group(),
@@ -43,7 +43,8 @@ Grupos = {
 "shoots" : pg.sprite.Group(),
 "shootsenemigos" : pg.sprite.Group(),
 "orbes" : pg.sprite.Group(),
-"enemigos" : pg.sprite.Group()
+"enemigos" : pg.sprite.Group(),
+"collisions" : pg.sprite.Group()
 }
 
 #Diccionarios de Recursos
@@ -105,12 +106,23 @@ ItemSheets = {
 "Spawn": comp.recortarAnimacion(pg.image.load("Recursos/Sprites/Items/spawn.png"),(64,96),2)
 }
 
-#print ItemSheets["Shoot_Minion"]
+
 
 LevelTutorial = {
-"Background" : pg.image.load("Recursos/Graficos/Backgrounds/background_tutorial.png")
+"Background" : pg.image.load("Recursos/Graficos/Backgrounds/background_tutorial.png"),
+"TeclasMovimiento" : pg.transform.scale(pg.image.load("Recursos/Graficos/Tutorial/teclasmovimiento.png"),(300,195)),
+"Espacio" : pg.transform.scale(pg.image.load("Recursos/Graficos/Tutorial/espacio.png"),(300,195)),
+"Orbes" : pg.transform.scale(pg.image.load("Recursos/Graficos/Tutorial/orbes.png"),(300,195)),
+"Generador" : pg.transform.scale(pg.image.load("Recursos/Graficos/Tutorial/generador.png"),(300,195)),
+"Pelea" : pg.transform.scale(pg.image.load("Recursos/Graficos/Tutorial/pelea.png"),(300,195)),
+"Mision" : pg.transform.scale(pg.image.load("Recursos/Graficos/Tutorial/mision.png"),(300,195))
 
 }
+'''
+"TeclasMovimiento" : pg.image.load("Recursos/Graficos/Tutorial/teclasmovimiento.png"),
+"Espacio" : pg.image.load("Recursos/Graficos/Tutorial/espacio.png")
+'''
+
 
 Level1Graficos = {
 "Background": pg.image.load("Recursos/Graficos/Backgrounds/Background.png"),

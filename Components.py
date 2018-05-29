@@ -5,8 +5,8 @@ import pygame as pg
 import Constans as c
 import random
 
-Global_posicion_x = -512
-Global_posicion_y = -512
+Global_posicion_x = 0
+Global_posicion_y = 0
 
 Global_speed_x = 0
 Global_speed_y = 0
@@ -74,7 +74,7 @@ class Goku(pg.sprite.Sprite):
 
 
         self.exp = 0
-        self.nivel = 20
+        self.nivel = 5
         self.expsiguientenivel = (self.factordenivel**self.nivel)*self.factordenivel+100
 
         self.dano = self.danobase*self.nivel/2
@@ -288,7 +288,7 @@ class Goku(pg.sprite.Sprite):
                 collide = pg.sprite.collide_circle(self,en)
                 if collide:
                     if self.fdano:
-                        print en.name
+
                         danototal = (en.cdano-(self.resistencia*en.cdano/100))
                         self.vida -= danototal
                         im = Impacto(self.rect.center, 0)
@@ -631,8 +631,8 @@ class GeneradorMinions(pg.sprite.Sprite):
                         self.n = 0
                         cant = random.randrange(1,4)
                         for i in range(cant):
-                            x = random.randrange(-128,128)
-                            y = random.randrange(-128,128)
+                            x = random.randrange(-64,64)
+                            y = random.randrange(-64,64)
                             pos = (self.rect.centerx+x,self.rect.centery+y)
                             minion = Minion(pos,self.target)
                             im = Impacto(pos,0)
@@ -881,6 +881,21 @@ class Minion(pg.sprite.Sprite):
                     self.generarrecompensa()
                     self.kill()
 
+class CollisionChecker(pg.sprite.Sprite):
+    def __init__(self, possize):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((possize[2],possize[3]))
+        self.rect = self.image.get_rect()
+        self.name = "default"
+        self.rect.x = possize[0]
+        self.rect.y = possize[1]
+        self.init_x = self.rect.x
+        self.init_y = self.rect.y
+        self.layer = 2
+    def update(self):
+        self.rect.x = self.init_x + Global_posicion_x
+        self.rect.y = self.init_y + Global_posicion_y
+
 class TextoFlotante(pg.sprite.Sprite):
         def __init__(self, pos,texto,color):
             pg.sprite.Sprite.__init__(self)
@@ -1120,15 +1135,14 @@ class Orbes(pg.sprite.Sprite):
                     self.indexanim = 0
 
 class Background(pg.sprite.Sprite):
-    def __init__(self,tm):
+    def __init__(self,tm,img):
         pg.sprite.Sprite.__init__(self)
-        self.image =  pg.transform.scale(c.Level1Graficos["Background"], tm)
+        self.image =  pg.transform.scale(img, tm)
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 0
         self.init_x = self.rect.x
         self.init_y = self.rect.y
-        self.layer = 3
 
     def update(self):
         self.rect.x = self.init_x + Global_posicion_x

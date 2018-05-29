@@ -16,6 +16,10 @@ class State():
         pass
     def setup(self):
         pg.display.set_caption(self.caption)
+    def reboot(self):
+        pass
+    def boot(self):
+        pass
     def __str__(self):
         return "Caption: %s, Estado Siguiente: %s" % (self.caption,self.estado_siguiente)
     def quit(self):
@@ -79,6 +83,22 @@ class MenuPrincipal(State):
         self.n = 0
         self.fbtn = False
 
+    def boot(self):
+        self.alpha = 255
+        self.alpha2 = 0
+        self.title1_x = -1024
+        self.title1_y = 16
+        self.aumento = 100
+        self.title2_x = -1024
+        self.title2_y = 16
+        self.aumento2 = 35
+        self.bg_x = 0
+        self.bg_y = 0
+        self.dir = 0
+        self.n = 0
+        self.fbtn = False
+
+
     def update(self):
 
         self.ventana.fill((0,0,255))
@@ -128,7 +148,7 @@ class MenuPrincipal(State):
 
         if key[pg.K_SPACE] or key[pg.K_RETURN] or key[pg.K_KP_ENTER]:
             if self.n == 0:
-                self.estado_siguiente = "Level1"
+                self.estado_siguiente = "Tutorial"
                 self.quit()
             elif self.n == 1:
                 self.estado_siguiente = "QUIT"
@@ -153,104 +173,155 @@ class Prologo(State):
         self.ventana.fill(c.NEGRO)
         self.ventana.blit(self.texto,(100,100))
 
-#------------ESTADO: Tutorial--------------------------------------------------
+#------------ESTADO: CLASE PADRE PARA CADA NIVEL--------------------------------
 class Level(State):
-    def __init__(self,caption,estado_siguiente):
+    def __init__(self,caption,estado_siguiente,tamano_mundo,mapeado,titulo):
         State.__init__(self,caption,estado_siguiente)
-        pass
-
-    def update(self):
-        pass
-#------------ESTADO: Level 1--------------------------------------------
-class Level1(State):
-    def __init__(self,caption,estado_siguiente):
-        State.__init__(self,caption,estado_siguiente)
-        self.tamano_mundo = (3904,4720)
-        with open("Recursos/Datos/mapeado.json") as archivo:
-            self.datos = json.load(archivo)
+        self.tamano_mundo = tamano_mundo
         self.fuente = pg.font.Font(None, 16)
         self.fuente2 = pg.font.Font(None, 14)
-        #self.objetivo = self.fuente.render("Objetivo: Encuentra el Orbe ROJO, SPACE: Velociad, A: Golpe, S: Golpe Mejorado, D: Bola de energia", 0, (0, 0, 0))
-        self.timewait = 50
-
-        comp.Global_posicion_x = -512
-        comp.Global_posicion_y = -512
-
-        #Objetos
+        self.fuenteTitulo = pg.font.Font(None,72)
+        self.timewait = 150
         self.target = [None]
-        self.bg = comp.Background(self.tamano_mundo)
-        self.goku = comp.Goku(self.tamano_mundo,self.target)
-        #self.minion = comp.Minion((512,512),self.target)
-        self.goku.rect.x = 512
-        self.goku.rect.y = 512
+        with open(mapeado) as archivo:
+            self.datos = json.load(archivo)
 
-        #Anadir objetos GRUPO USUARIOS
-        c.Grupos["usuarios"].add(self.goku)
+        self.x = -1000
+        self.y = 512
+        self.pow = 100
 
-        #Anadir objetos GRUPO TODOS
-        self.generarjsonmuros()
-        c.Grupos["todos"].add(self.bg)
-        self.generarjsonorbes()
-        self.generarjsonenemigos()
-        #c.Grupos["enemigos"].add(self.minion)
-        #c.Grupos["todos"].add(self.minion)
-        c.Grupos["todos"].add(self.goku)
-        self.generarjsonforeground()
+        self.xm = -1000
+        self.ym = 512
+        self.powm = 100
 
-    def generarjsonmuros(self):
-        for i in self.datos["layers"][1]["objects"]:
-            possize = (i["x"],i["y"],i["width"],i["height"])
-            m = comp.Muro(possize)
-            c.Grupos["muros"].add(m)
-            c.Grupos["todos"].add(m)
+        self.ftitle = True
+        self.titulo = titulo
+        self.texttitle = self.fuenteTitulo.render("{}...".format(self.titulo),True,c.BLANCO)
+        self.texttitlesombra = self.fuenteTitulo.render("{}...".format(self.titulo),True,c.NEGRO)
+        self.completado = False
 
-    def generarjsonforeground(self):
-        for i in self.datos["layers"][3]["objects"]:
-            pos = (i["x"],i["y"]-i["height"])
-            m = comp.Edificio(pos)
-            c.Grupos["todos"].add(m)
-        for i in self.datos["layers"][2]["objects"]:
-            pos = (i["x"],i["y"]-i["height"])
-            m = comp.Palmera(pos)
-            c.Grupos["todos"].add(m)
+        #self.boot()
 
-    def generarjsonorbes(self):
-        for i in self.datos["layers"][5]["objects"]:
-            pos = (i["x"],i["y"])
-            orb = comp.Orbes("Ki",pos)
-            c.Grupos["orbes"].add(orb)
-            c.Grupos["todos"].add(orb)
-        for i in self.datos["layers"][6]["objects"]:
-            pos = (i["x"],i["y"])
-            orb = comp.Orbes("Vida",pos)
-            c.Grupos["orbes"].add(orb)
-            c.Grupos["todos"].add(orb)
-        for i in self.datos["layers"][7]["objects"]:
-            pos = (i["x"],i["y"])
-            orb = comp.Orbes("Trampa",pos)
-            c.Grupos["orbes"].add(orb)
-            c.Grupos["todos"].add(orb)
+    def reboot(self):
+        c.limpiargrupos()
 
-    def generarjsonenemigos(self):
-        for i in self.datos["layers"][4]["objects"]:
-            pos = (i["x"],i["y"])
-            en = comp.Triceratops(pos,self.target)
-            c.Grupos["enemigos"].add(en)
-            c.Grupos["todos"].add(en)
-        for i in self.datos["layers"][8]["objects"]:
-            pos = (i["x"],i["y"])
-            en = comp.GeneradorMinions(pos,self.target)
-            #c.Grupos["enemigos"].add(en)
-            c.Grupos["todos"].add(en)
+    def boot(self):
+        self.timewait = 150
+        self.completado = False
 
+        comp.Global_posicion_x = 0
+        comp.Global_posicion_y = -335
+        self.x = -1000
+        self.y = 512
+        self.pow = 100
+        self.ftitle = True
+        self.xm = -1000
+        self.ym = 512
+        self.powm = 100
+        self.makeboot()
+
+    def makeboot(self):
+        pass
+
+
+    def buscarcapa(self,capa):
+        index = -1
+        f = False
+        for i in self.datos["layers"]:
+            index += 1
+            if i["name"]== capa:
+                f = True
+                break
+        if f:
+            return index
+        else:
+            return -1
+
+    def generarmuros(self,listname = None):
+        index = self.buscarcapa("Muros")
+        print index
+        if index > -1:
+            for i in self.datos["layers"][index]["objects"]:
+                possize = (i["x"],i["y"],i["width"],i["height"])
+                m = comp.Muro(possize)
+                c.Grupos["muros"].add(m)
+                c.Grupos["todos"].add(m)
+            if listname != None:
+                j = 0
+                for i in self.datos["layers"][index+1]["objects"]:
+                    possize = (i["x"],i["y"],i["width"],i["height"])
+                    m = comp.CollisionChecker(possize)
+                    m.name = listname[j]
+                    j+=1
+                    c.Grupos["collisions"].add(m)
+                    c.Grupos["todos"].add(m)
+
+        else:
+            print "No se generaron muros"
+
+    def generarorbes(self):
+        index = self.buscarcapa("Orbeski")
+        if index > -1:
+            for i in self.datos["layers"][index]["objects"]:
+                pos = (i["x"],i["y"])
+                orb = comp.Orbes("Ki",pos)
+                c.Grupos["orbes"].add(orb)
+                c.Grupos["todos"].add(orb)
+            for i in self.datos["layers"][index+1]["objects"]:
+                pos = (i["x"],i["y"])
+                orb = comp.Orbes("Vida",pos)
+                c.Grupos["orbes"].add(orb)
+                c.Grupos["todos"].add(orb)
+            for i in self.datos["layers"][index+2]["objects"]:
+                pos = (i["x"],i["y"])
+                orb = comp.Orbes("Trampa",pos)
+                c.Grupos["orbes"].add(orb)
+                c.Grupos["todos"].add(orb)
+            for i in self.datos["layers"][index+3]["objects"]:
+                pos = (i["x"],i["y"])
+                orb = comp.Orbes("Exp",pos)
+                c.Grupos["orbes"].add(orb)
+                c.Grupos["todos"].add(orb)
+        else:
+            print "No se generaron orbes"
+
+    def generarenemigos(self, listaenemigos):
+        index = self.buscarcapa("Triceratops")
+        if index > -1:
+            if listaenemigos["Triceratops"]:
+                for i in self.datos["layers"][index]["objects"]:
+                    pos = (i["x"],i["y"])
+                    en = comp.Triceratops(pos,self.target)
+                    c.Grupos["enemigos"].add(en)
+                    c.Grupos["todos"].add(en)
+            if listaenemigos["Generador"]:
+                for i in self.datos["layers"][index+1]["objects"]:
+                    pos = (i["x"],i["y"])
+                    en = comp.GeneradorMinions(pos,self.target)
+                    #c.Grupos["enemigos"].add(en)
+                    c.Grupos["todos"].add(en)
+        else:
+            print "No se generaron enemigos"
+
+    def generarforeground(self):
+        index = self.buscarcapa("Palmeras")
+        if index > -1:
+            for i in self.datos["layers"][index]["objects"]:
+                pos = (i["x"],i["y"]-i["height"])
+                m = comp.Palmera(pos)
+                c.Grupos["todos"].add(m)
+
+            for i in self.datos["layers"][index+1]["objects"]:
+                pos = (i["x"],i["y"]-i["height"])
+                m = comp.Edificio(pos)
+                c.Grupos["todos"].add(m)
+        else:
+            print "No se genero foreground"
+
+    def update2(self):
+        pass
 
     def update(self):
-        if not self.goku.live:
-            self.timewait -= 1
-
-        if self.timewait <= 0:
-            self.siguiente_estado = "GameOver"
-            self.quit()
 
         self.ventana.fill(c.NEGRO)
         c.Grupos["todos"].update()
@@ -271,7 +342,6 @@ class Level1(State):
 
 
         if self.target[0] != None:
-
             if self.target[0].name == "Cell":
                 pg.draw.rect(self.ventana,(100,100,100),(80,190,self.target[0].vidamax, 18))
                 pg.draw.rect(self.ventana,(255,0,0),(80,190,self.target[0].vida, 18))
@@ -284,3 +354,144 @@ class Level1(State):
                 pg.draw.rect(self.ventana,(100,100,100),(58,178,self.target[0].vidamax, 15))
                 pg.draw.rect(self.ventana,(255,0,0),(58,178,self.target[0].vida, 15))
                 self.ventana.blit(c.ItemSheets["MinionBarLife"],(16,160))
+
+
+        if self.ftitle:
+            self.ventana.blit(self.texttitlesombra,(self.x-3,self.y-3))
+            self.ventana.blit(self.texttitle,(self.x,self.y))
+
+            self.x += self.pow
+            if self.x < 99:
+                self.pow = self.pow/1.1
+            else:
+                self.pow = self.pow*1.1
+
+            if self.x > c.TAMANO_VENTANA[0]:
+                self.ftitle = False
+
+        if self.completado:
+            text = self.fuenteTitulo.render("Nivel Completado...",True,c.BLANCO)
+            textsombra = self.fuenteTitulo.render("Nivel Completado...",True,c.NEGRO)
+            self.ventana.blit(textsombra,(self.xm-3,self.ym-3))
+            self.ventana.blit(text,(self.xm,self.ym))
+
+            self.xm += self.powm
+            if self.xm < 99:
+                self.powm = self.powm/1.1
+            else:
+                self.powm = self.powm*1.1
+
+            self.timewait -= 1
+
+        if not self.goku.live:
+            text = self.fuenteTitulo.render("Juego Terminado",True,c.BLANCO)
+            textsombra = self.fuenteTitulo.render("Juego Terminado",True,c.NEGRO)
+            self.ventana.blit(textsombra,(self.xm-3,self.ym-3))
+            self.ventana.blit(text,(self.xm,self.ym))
+
+            self.xm += self.powm
+            if self.xm < 99:
+                self.powm = self.powm/1.1
+            else:
+                self.powm = self.powm*1.1
+            self.timewait -= 1
+
+        if self.timewait <= 0:
+            if not self.goku.live:
+                self.estado_siguiente = "Menu"
+            self.quit()
+
+
+        self.update2()
+#------------ESTADO: Level tutorial-------------------------------------------------
+
+class LevelTutorial(Level):
+    def __init__(self,caption,estado_siguiente):
+        Level.__init__(self,caption,estado_siguiente,(2692,1790),"Recursos/Datos/mapeado_tutorial.json","Casa de Goku")
+
+    def makeboot(self):
+
+        c.LevelTutorial["TeclasMovimiento"].convert_alpha()
+
+        self.tuto = {
+        "Teclas":True,
+        "Espacio":False,
+        "Orbes":False,
+        "Busca":False,
+        "Pelea":False
+        }
+
+        self.listaenemigos = {
+        "Triceratops":False,
+        "Generador":True
+
+        }
+
+        self.listname = ["Espacio","Orbes","Busca","Pelea"]
+
+        self.bg = comp.Background(self.tamano_mundo,c.LevelTutorial["Background"])
+        self.goku = comp.Goku(self.tamano_mundo,self.target)
+        self.goku.rect.x = 320
+        self.goku.rect.y = 512
+        c.Grupos["usuarios"].add(self.goku)
+        #Anadir objetos GRUPO TODOS
+        self.generarmuros(self.listname)
+        c.Grupos["todos"].add(self.bg)
+        self.generarorbes()
+        self.generarenemigos(self.listaenemigos)
+        c.Grupos["todos"].add(self.goku)
+        self.generarforeground()
+
+    def update2(self):
+        if self.goku.nivel >= 5:
+            self.completado = True
+        collisions = pg.sprite.spritecollide(self.goku,c.Grupos["collisions"],False)
+        for col in collisions:
+
+            for i in self.listname:
+                if (col.name == i):
+                    for j in self.tuto:
+                        self.tuto[j] = False
+                    #print self.tuto
+                    self.tuto[i] = True
+                    break
+            #print self.tuto
+
+        if self.tuto["Teclas"]:
+            self.ventana.blit(c.LevelTutorial["TeclasMovimiento"],(720,32))
+        elif self.tuto["Espacio"]:
+            self.ventana.blit(c.LevelTutorial["Espacio"],(720,32))
+        elif self.tuto["Orbes"]:
+            self.ventana.blit(c.LevelTutorial["Orbes"],(720,32))
+        elif self.tuto["Busca"]:
+            self.ventana.blit(c.LevelTutorial["Generador"],(720,32))
+        elif self.tuto["Pelea"]:
+            self.ventana.blit(c.LevelTutorial["Pelea"],(720,32))
+            self.ventana.blit(c.LevelTutorial["Mision"],(720,300))
+
+
+
+#------------ESTADO: Level 1-------------------------------------------------
+class Level1(Level):
+    def __init__(self,caption,estado_siguiente):
+        Level.__init__(self,caption,estado_siguiente,(3904,4720),"Recursos/Datos/mapeado.json","Nivel 1")
+
+    def makeboot(self):
+
+        self.listaenemigos = {
+        "Triceratops":True,
+        "Generador":True
+        }
+
+        self.bg = comp.Background(self.tamano_mundo,c.Level1Graficos["Background"])
+        self.goku = comp.Goku(self.tamano_mundo,self.target)
+        self.goku.rect.x = 100
+        self.goku.rect.y = 512
+        c.Grupos["usuarios"].add(self.goku)
+        #Anadir objetos GRUPO TODOS
+        self.generarmuros()
+        c.Grupos["todos"].add(self.bg)
+        self.generarorbes()
+        self.generarenemigos(self.listaenemigos)
+        c.Grupos["todos"].add(self.goku)
+        self.generarforeground()

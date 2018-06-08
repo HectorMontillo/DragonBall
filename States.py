@@ -148,7 +148,7 @@ class MenuPrincipal(State):
 
         if key[pg.K_SPACE] or key[pg.K_RETURN] or key[pg.K_KP_ENTER]:
             if self.n == 0:
-                self.estado_siguiente = "Tutorial"
+                self.estado_siguiente = "Prologo"
                 self.quit()
             elif self.n == 1:
                 self.estado_siguiente = "QUIT"
@@ -157,21 +157,6 @@ class MenuPrincipal(State):
                 self.estado_siguiente = "Creditos"
                 self.quit()
 
-#------------ESTADO: Prologo--------------------------------------------------
-class Prologo(State):
-    def __init__(self,caption,estado_siguiente):
-        State.__init__(self,caption,estado_siguiente)
-        self.fuente = pg.font.Font(None,32)
-        self.texto = self.fuente.render("Prologo",True, c.BLANCO)
-
-    def update(self):
-        key = pg.key.get_pressed()
-
-        if key[pg.K_SPACE]:
-            self.fin = True
-
-        self.ventana.fill(c.NEGRO)
-        self.ventana.blit(self.texto,(100,100))
 
 #------------ESTADO: CLASE PADRE PARA CADA NIVEL--------------------------------
 class Level(State):
@@ -180,6 +165,8 @@ class Level(State):
         self.tamano_mundo = tamano_mundo
         self.fuente = pg.font.Font(None, 16)
         self.fuente2 = pg.font.Font(None, 14)
+        self.fuente3 = pg.font.Font(None, 48)
+        self.fuente4 = pg.font.Font(None, 22)
         self.fuenteTitulo = pg.font.Font(None,72)
         self.timewait = 150
         self.target = [None]
@@ -384,6 +371,7 @@ class Level(State):
             self.timewait -= 1
 
         if not self.goku.live:
+            self.estado_siguiente = "Menu"
             text = self.fuenteTitulo.render("Juego Terminado",True,c.BLANCO)
             textsombra = self.fuenteTitulo.render("Juego Terminado",True,c.NEGRO)
             self.ventana.blit(textsombra,(self.xm-3,self.ym-3))
@@ -398,7 +386,13 @@ class Level(State):
 
         if self.timewait <= 0:
             if not self.goku.live:
-                self.estado_siguiente = "Menu"
+                c.Gokusaves["Nivel"] = 1
+                c.Gokusaves["Exp"]  = 0
+            else:
+                c.Gokusaves["Nivel"] = self.goku.nivel
+                c.Gokusaves["Exp"]  = self.goku.exp
+
+
             self.quit()
 
 
@@ -426,24 +420,28 @@ class LevelTutorial(Level):
         "Generador":True
 
         }
-
+        self.target = [None]
         self.listname = ["Espacio","Orbes","Busca","Pelea"]
 
         self.bg = comp.Background(self.tamano_mundo,c.LevelTutorial["Background"])
         self.goku = comp.Goku(self.tamano_mundo,self.target)
         self.goku.rect.x = 320
         self.goku.rect.y = 512
+        self.krilin = comp.Ciudadano((320,512),0)
         c.Grupos["usuarios"].add(self.goku)
         #Anadir objetos GRUPO TODOS
         self.generarmuros(self.listname)
         c.Grupos["todos"].add(self.bg)
         self.generarorbes()
         self.generarenemigos(self.listaenemigos)
+        c.Grupos["todos"].add(self.krilin)
         c.Grupos["todos"].add(self.goku)
+
         self.generarforeground()
 
     def update2(self):
-        if self.goku.nivel >= 5:
+        self.ventana.blit(c.LevelTutorial["Dialogo"],(self.krilin.rect.x-70,self.krilin.rect.y-70))
+        if self.goku.nivel >= 3:
             self.completado = True
         collisions = pg.sprite.spritecollide(self.goku,c.Grupos["collisions"],False)
         for col in collisions:
@@ -471,6 +469,8 @@ class LevelTutorial(Level):
 
 
 
+
+
 #------------ESTADO: Level 1-------------------------------------------------
 class Level1(Level):
     def __init__(self,caption,estado_siguiente):
@@ -482,8 +482,120 @@ class Level1(Level):
         "Triceratops":True,
         "Generador":True
         }
+        self.target = [None]
+        self.framescont = 0
+        self.sec = 59
+        self.min = 1
+        self.timecount = False
+        self.mision1 = False
+
+        self.and17 = False
+        self.androide17 = None
+
+        self.misiones = ["Salava a Bulma y a Milk", "El tiempo se agota!!, sube tu nivel"]
 
         self.bg = comp.Background(self.tamano_mundo,c.Level1Graficos["Background"])
+        self.goku = comp.Goku(self.tamano_mundo,self.target)
+        self.goku.rect.x = 100
+        self.goku.rect.y = 512
+        self.bulma = comp.Ciudadano((1946,1396),1)
+        self.milk = comp.Ciudadano((1908,3295),2)
+        c.Grupos["ciudadanos"].add(self.bulma)
+        c.Grupos["ciudadanos"].add(self.milk)
+        c.Grupos["usuarios"].add(self.goku)
+        #Anadir objetos GRUPO TODOS
+        self.generarmuros()
+        c.Grupos["todos"].add(self.bg)
+        self.generarorbes()
+        self.generarenemigos(self.listaenemigos)
+        c.Grupos["todos"].add(self.bulma)
+        c.Grupos["todos"].add(self.milk)
+        c.Grupos["todos"].add(self.goku)
+        self.generarforeground()
+
+
+
+    def update2(self):
+
+        misiontitle = self.fuente3.render("Misiones",True,c.AMARILLO)
+        misiontitlesombra = self.fuente3.render("Misiones",True,c.NEGRO)
+
+        if self.and17:
+            if not self.androide17.live:
+                self.completado = True
+
+        if not self.mision1:
+            y = 280
+            for i in self.misiones:
+                aste = self.fuente3.render("*",True,c.ROJO)
+                astesombra = self.fuente3.render("*",True,c.NEGRO)
+
+                mision = self.fuente4.render("{}".format(i),True,c.NEGRO)
+                self.ventana.blit(mision,(32-2,y-2))
+                self.ventana.blit(astesombra,(20-2,y-2))
+                self.ventana.blit(aste,(20,y))
+                y += 32
+        else:
+            if not self.and17:
+                yand = self.goku.rect.y + random.randrange(-64,64)
+                xand = self.goku.rect.x + random.randrange(-64,64)
+                self.androide17 = comp.Androide17((xand,yand),self.target)
+                c.Grupos["todos"].add(self.androide17)
+                c.Grupos["enemigos"].add(self.androide17)
+            self.and17 = True
+            y = 280
+            aste = self.fuente3.render("*",True,c.ROJO)
+            astesombra = self.fuente3.render("*",True,c.NEGRO)
+
+            mision = self.fuente4.render("Destruye al Androide 17",True,c.NEGRO)
+            self.ventana.blit(mision,(32-2,y-2))
+            self.ventana.blit(astesombra,(20-2,y-2))
+            self.ventana.blit(aste,(20,y))
+
+
+        self.ventana.blit(misiontitlesombra,(20-3,248-3))
+        self.ventana.blit(misiontitle,(20,248))
+        if (not self.timecount):
+            text = self.fuenteTitulo.render("{}:{}".format(self.min,self.sec),True,c.ROJO)
+            textsombra = self.fuenteTitulo.render("{}:{}".format(self.min,self.sec),True,c.NEGRO)
+            self.ventana.blit(textsombra,(475-3,32-3))
+            self.ventana.blit(text,(475,32))
+            if (self.framescont >= 60):
+                self.framescont = 0
+                if self.sec <= 0:
+                    self.sec = 59
+                    if self.min > 0:
+                        self.min -= 1
+                    else:
+                        self.timecount = True
+                else:
+                    self.sec -= 1
+            else:
+                self.framescont += 1
+        elif self.goku.ciudadanos <2:
+            self.goku.live = False
+        else:
+            self.mision1 = True
+
+
+#------------ESTADO: Level Final-------------------------------------------------
+class LevelFinal(Level):
+    def __init__(self,caption,estado_siguiente):
+        Level.__init__(self,caption,estado_siguiente,(1376,1412),"Recursos/Datos/mapeado_final.json","Nivel Final")
+
+    def makeboot(self):
+
+        self.listaenemigos = {
+        "Triceratops":False,
+        "Generador":True
+        }
+        self.target = [None]
+        comp.Global_posicion_x = -256
+        comp.Global_posicion_y = -335
+
+        self.misiones = ["Derrota a Cell"]
+
+        self.bg = comp.Background(self.tamano_mundo,c.LevelFinalGraficos["Background"])
         self.goku = comp.Goku(self.tamano_mundo,self.target)
         self.goku.rect.x = 100
         self.goku.rect.y = 512
@@ -491,7 +603,56 @@ class Level1(Level):
         #Anadir objetos GRUPO TODOS
         self.generarmuros()
         c.Grupos["todos"].add(self.bg)
-        self.generarorbes()
-        self.generarenemigos(self.listaenemigos)
+        #self.generarorbes()
+        #self.generarenemigos(self.listaenemigos)
         c.Grupos["todos"].add(self.goku)
-        self.generarforeground()
+        #self.generarforeground()
+
+
+
+    def update2(self):
+
+        misiontitle = self.fuente3.render("Misiones",True,c.AMARILLO)
+        misiontitlesombra = self.fuente3.render("Misiones",True,c.NEGRO)
+
+
+        y = 280
+        for i in self.misiones:
+            aste = self.fuente3.render("*",True,c.ROJO)
+            astesombra = self.fuente3.render("*",True,c.NEGRO)
+            mision = self.fuente4.render("{}".format(i),True,c.NEGRO)
+            self.ventana.blit(mision,(32-2,y-2))
+            self.ventana.blit(astesombra,(20-2,y-2))
+            self.ventana.blit(aste,(20,y))
+            y += 32
+
+        self.ventana.blit(misiontitlesombra,(20-3,248-3))
+        self.ventana.blit(misiontitle,(20,248))
+
+
+#------------ESTADO: Prologo -------------------------------------------------
+class Prologo(State):
+    def __init__(self,caption,estado_siguiente):
+        State.__init__(self,caption,estado_siguiente)
+        self.fuente = pg.font.Font(None,22)
+        self.text = self.fuente.render("Presione A continuar", True, c.BLANCO)
+    def boot(self):
+        c.limpiargrupos()
+        pg.mixer.quit()
+        self.movie = pg.movie.Movie('Recursos/Videos/output2.mpg')
+        self.movie_screen = pg.Surface(self.movie.get_size())
+        self.movie.set_display(self.movie_screen)
+        self.movie.set_volume(0.99)
+        self.movie.play()
+
+    def update(self):
+        key = pg.key.get_pressed()
+        if key[pg.K_a]:
+            self.movie.stop()
+            self.quit()
+        #self.ventana.fill(c.BLANCO)
+        self.ventana.blit(c.GraficosMenuPrincipal["MenuBackground"], (0,0))
+        self.ventana.blit(self.movie_screen,(128,128))
+        self.ventana.blit(c.GraficosMenuPrincipal["TitleDBZ"], (200,16))
+        self.ventana.blit(c.GraficosMenuPrincipal["TitleBMAll"], (200,16))
+        self.ventana.blit(self.text,(c.TAMANO_VENTANA[0]-300,c.TAMANO_VENTANA[1]-55))

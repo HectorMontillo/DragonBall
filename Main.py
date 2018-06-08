@@ -9,12 +9,12 @@ def main():
 
     diccionarioEstados = {
         "PantallaInicio": States.PantallaInicio("Pantalla de Inicio","Menu"),
-        "Menu": States.MenuPrincipal("Menu principal","Tutorial"),
+        "Menu": States.MenuPrincipal("Menu principal","Prologo"),
         "Prologo": States.Prologo("Prologo","Tutorial"),
         "Tutorial": States.LevelTutorial("Tutorial","Level1"),
         "Level1" :States.Level1("Level 1","QUIT"),
         "Interludio1" : None,
-        "Level2" : None,
+        "LevelFinal" : States.LevelFinal("Level Final","Menu"),
         "Interludio2" : None,
         "Level3" : None,
         "Interludio3" : None,
@@ -26,7 +26,7 @@ def main():
     diccionarioEstados["Tutorial"].setup()
 
     controlador = Control()
-    controlador.preparar_estados(diccionarioEstados,diccionarioEstados["PantallaInicio"])
+    controlador.preparar_estados(diccionarioEstados,diccionarioEstados["LevelFinal"])
     print "-----------Sistema de estados, Inicializado--------------"
     controlador.main()
     print "-----------------Aplicaion Finalizada--------------------"
